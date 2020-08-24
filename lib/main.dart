@@ -6,12 +6,15 @@ void main() {
 }
 
 class Lesson1App extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
     // Done: Implement Build
     return MaterialApp(
+      initialRoute: StartScreen.routeName,
       routes: {
-      '/': (BuildContext context){ return StartScreen();},
+      StartScreen.routeName: (BuildContext context){ return StartScreen();},
       },
     );
   }
