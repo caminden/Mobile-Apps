@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lesson1/screens/startscreen.dart';
 
 void main() {
   runApp(Lesson1App());
@@ -9,7 +10,9 @@ class Lesson1App extends StatelessWidget {
   Widget build(BuildContext context) {
     // Done: Implement Build
     return MaterialApp(
-      home: Text("My first app"),
+      routes: {
+      '/': (BuildContext context){ return StartScreen();},
+      },
     );
   }
 
