@@ -19,7 +19,7 @@ class StartScreen extends StatelessWidget {
         ),
         RaisedButton.icon(
           onPressed: (){print('button demo');},
-          icon: Icon(Icons.add_alarm),
+          icon: Icon(Icons.ac_unit, color: Colors.red),
           label: Text('Button demo'),
         )
       ]),
