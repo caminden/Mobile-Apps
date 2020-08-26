@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lesson1/screens/buttondemo_screen.dart';
+import 'package:lesson1/screens/imagedemo_screen.dart';
 import 'package:lesson1/screens/startscreen.dart';
 
 void main() {
@@ -14,7 +16,9 @@ class Lesson1App extends StatelessWidget {
     return MaterialApp(
       initialRoute: StartScreen.routeName,
       routes: {
-      StartScreen.routeName: (BuildContext context){ return StartScreen();},
+      StartScreen.routeName: (context) => StartScreen(),
+      ImageDemoScreen.routeName: (context) => ImageDemoScreen(),
+      ButtonDemoScreen.routeName: (context) => ButtonDemoScreen(),
       },
     );
   }
