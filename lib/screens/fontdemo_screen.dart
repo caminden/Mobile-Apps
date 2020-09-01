@@ -9,8 +9,14 @@ class FontDemoScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Font Demo"),
       ),
-      body: Text("Font Demo"),
-      );
+      body: Text("MAP Fall 2020",
+          style: TextStyle(
+            fontSize: 30.0,
+            fontFamily: 'IndieFlower',
+            fontWeight: FontWeight.bold,
+            color: Colors.blue,
+            letterSpacing: 2.0,
+          )),
+    );
   }
-  
 }
