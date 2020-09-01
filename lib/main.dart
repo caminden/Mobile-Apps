@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lesson1/screens/buttondemo_screen.dart';
+import 'package:lesson1/screens/fontdemo_screen.dart';
 import 'package:lesson1/screens/imagedemo_screen.dart';
 import 'package:lesson1/screens/startscreen.dart';
 
@@ -19,6 +20,7 @@ class Lesson1App extends StatelessWidget {
       StartScreen.routeName: (context) => StartScreen(),
       ImageDemoScreen.routeName: (context) => ImageDemoScreen(),
       ButtonDemoScreen.routeName: (context) => ButtonDemoScreen(),
+      FontDemoScreen.routeName: (context) => FontDemoScreen(),
       },
     );
   }

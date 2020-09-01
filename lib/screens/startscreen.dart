@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lesson1/screens/buttondemo_screen.dart';
+import 'package:lesson1/screens/fontdemo_screen.dart';
 import 'package:lesson1/screens/imagedemo_screen.dart';
 
 class StartScreen extends StatelessWidget {
@@ -21,7 +22,12 @@ class StartScreen extends StatelessWidget {
           onPressed: () => Navigator.pushNamed(context, ButtonDemoScreen.routeName),
           icon: Icon(Icons.ac_unit, color: Colors.red),
           label: Text('Button demo'),
-        )
+        ),
+        RaisedButton.icon(
+          onPressed: () => Navigator.pushNamed(context, FontDemoScreen.routeName),
+          icon: Icon(Icons.ac_unit, color: Colors.red),
+          label: Text('Font demo'),
+        ),
       ]),
     );
   }
