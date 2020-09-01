@@ -25,7 +25,7 @@ class StartScreen extends StatelessWidget {
         ),
         RaisedButton.icon(
           onPressed: () => Navigator.pushNamed(context, FontDemoScreen.routeName),
-          icon: Icon(Icons.ac_unit, color: Colors.red),
+          icon: Icon(Icons.font_download, color: Colors.red[900]),
           label: Text('Font demo'),
         ),
       ]),
