@@ -3,6 +3,7 @@ import 'package:lesson1/screens/buttondemo_screen.dart';
 import 'package:lesson1/screens/expandeddemo_screen.dart';
 import 'package:lesson1/screens/fontdemo_screen.dart';
 import 'package:lesson1/screens/imagedemo_screen.dart';
+import 'package:lesson1/screens/namecard_screen.dart';
 import 'package:lesson1/screens/rowcolumndemo_screen.dart';
 
 class StartScreen extends StatelessWidget {
@@ -20,7 +21,7 @@ class StartScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
         RaisedButton(
-          child: Text('Image Demo'),
+          child: Text('Image Demo', style: Theme.of(context).textTheme.body1,),
           onPressed: () =>
               Navigator.pushNamed(context, ImageDemoScreen.routeName),
         ),
@@ -47,6 +48,12 @@ class StartScreen extends StatelessWidget {
               Navigator.pushNamed(context, ExpandedDemoScreen.routeName),
           icon: Icon(Icons.router, color: Colors.red[900]),
           label: Text('Expanded widget demo'),
+        ),
+        RaisedButton.icon(
+          onPressed: () =>
+              Navigator.pushNamed(context, NameCardScreen.routeName),
+          icon: Icon(Icons.router, color: Colors.red[900]),
+          label: Text('Namecard demo'),
         ),
       ]),
     );

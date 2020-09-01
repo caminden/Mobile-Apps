@@ -13,7 +13,7 @@ class ButtonDemoScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => print('Floating Action Button is pressed'),
         child: Icon(Icons.add),
-        backgroundColor: Colors.red[200],
+        //backgroundColor: Colors.red[200],
       ),
       body: Column(children: <Widget>[
         RaisedButton(
