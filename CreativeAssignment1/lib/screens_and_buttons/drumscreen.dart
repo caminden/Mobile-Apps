@@ -10,24 +10,25 @@ class DrumScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Drums"),
       ),
-      body: Wrap(
-        alignment: WrapAlignment.center,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runAlignment: WrapAlignment.center,
-        runSpacing: 50.0,
-        spacing: 50.0,
-        children: <Widget>[
-        Container(
-          color: Colors.yellow,
-          padding: EdgeInsets.fromLTRB(50, 1, 1, 50),
-          child: Text("1")
+      body: Center(
+        child: Container(
+          height: 50.0,
+          width: 50.0,
+          color: Colors.white,
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 10.0,
+                backgroundColor: Colors.yellow,
+              ),
+              CircleAvatar(
+                radius: 10.0,
+                backgroundColor: Colors.yellow,
+              ),
+            ],
+          ),
         ),
-        Container(
-          color: Colors.yellow,
-          padding: EdgeInsets.fromLTRB(50, 1, 1, 50),
-          child: Text("2"),
-        ),
-      ]),
+      ),
     );
   }
 }
