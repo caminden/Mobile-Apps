@@ -15,7 +15,16 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20.0,
               )),
-          actions: [Icon(Icons.location_on), Icon(Icons.wifi)]),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.location_on),
+              onPressed: () => print("Direction"),
+            ),
+            IconButton(
+              icon: Icon(Icons.wifi),
+              onPressed: () => print("Wifi"),
+            ),
+          ]),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
