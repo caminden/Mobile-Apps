@@ -10,6 +10,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      //start appbar
       appBar: AppBar(
           title: Text('Home',
               style: TextStyle(
@@ -25,6 +26,7 @@ class HomeScreen extends StatelessWidget {
               onPressed: () => print("Wifi"),
             ),
           ]),
+      //sliding drawer
       drawer: Drawer(
         child: ListView(
           children: <Widget>[
@@ -52,6 +54,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      //body for icons
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
