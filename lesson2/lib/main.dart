@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lesson2/screens/counterdemo_screen.dart';
 import 'package:lesson2/screens/start_screen.dart';
+import 'package:lesson2/screens/widgetlifecycle_screen.dart';
 
 void main() {
   runApp(lesson2App());
@@ -16,6 +17,7 @@ class lesson2App extends StatelessWidget {
       routes: {
         StartScreen.routeName: (context) => StartScreen(), 
         CounterDemoScreen.routeName: (context) =>CounterDemoScreen(),
+        WidgetLifeCycle.routeName: (context) => WidgetLifeCycle(),
       },
     );
   }
