@@ -3,7 +3,8 @@ class Course {
   String title;
   String prereq;
   String imageUrl;
-  Course({this.imageUrl, this.number, this.title, this.prereq});
+  bool selected;
+  Course({this.imageUrl, this.number, this.title, this.prereq, this.selected = false});
 }
 
 var courseList = [
