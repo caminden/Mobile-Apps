@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lesson2/model/profile.dart';
+import 'package:lesson2/screens/profileedit_screen.dart';
 
 class ProfileDemoScreen extends StatefulWidget {
   static const routeName = '/profileDemoScreen';
@@ -27,6 +28,12 @@ class _ProfileState extends State<ProfileDemoScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Profile Demo"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: con.edit,
+            ),
+          ],
         ),
         body: SingleChildScrollView(
             child: Container(
@@ -91,4 +98,9 @@ class _Controller {
   _ProfileState _state;
   _Controller(this._state);
   Profile profile = Profile();
+
+void edit(){
+  Navigator.pushNamed(_state.context, ProfileEditScreen.routeName, arguments: profile);
+}
+
 }
