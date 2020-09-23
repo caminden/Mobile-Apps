@@ -33,78 +33,102 @@ class _ProfileEditState extends State<ProfileEditScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Profile"),
+        actions: [
+          IconButton(icon: Icon(Icons.check), onPressed: con.save),
+        ],
       ),
       body: Form(
         key: formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.face),
-                labelText: "Name:",
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(
+                  icon: Icon(Icons.face),
+                  labelText: "Name:",
+                ),
+                autocorrect: false,
+                initialValue: profile.name,
+                validator: con.validatorName,
+                onSaved: con.onSavedName,
               ),
-              autocorrect: false,
-              initialValue: profile.name,
-              validator: con.validatorName,
-              onSaved: con.onSavedName,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                icon: Icon(Icons.today),
-                labelText: "Age:",
+              TextFormField(
+                decoration: InputDecoration(
+                  icon: Icon(Icons.today),
+                  labelText: "Age:",
+                ),
+                autocorrect: false,
+                keyboardType: TextInputType.number,
+                initialValue: profile.age.toString(),
+                validator: con.validatorAge,
+                onSaved: con.onSavedAge,
               ),
-              autocorrect: false,
-              keyboardType: TextInputType.number,
-              initialValue: profile.age.toString(),
-              validator: con.validatorAge,
-              onSaved: con.onSavedAge,
-            ),
-            SizedBox(height: 20.0),
-            Text("Major"),
-            Container(
-              margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
-              decoration: BoxDecoration(
-                border: Border.all(width: 2.0, color: Colors.blue),
+              SizedBox(height: 20.0),
+              Text("Major"),
+              Container(
+                margin: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 15.0),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 2.0, color: Colors.blue),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text(Major.CS.toString().split(".")[1]),
+                        value: Major.CS,
+                        groupValue: profile.major,
+                        onChanged: con.onChangedMajor,
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text(Major.SE.toString().split(".")[1]),
+                        value: Major.SE,
+                        groupValue: profile.major,
+                        onChanged: con.onChangedMajor,
+                      ),
+                    ),
+                    Expanded(
+                      child: RadioListTile(
+                        title: Text(Major.Other.toString().split(".")[1]),
+                        value: Major.Other,
+                        groupValue: profile.major,
+                        onChanged: con.onChangedMajor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
+              Text("Classification"),
+              DropdownButtonFormField(
+                hint: Text("Classification"),
+                value: profile.classification,
+                onChanged: con.onChangedClassification,
+                items: con.getClassificationList(),
+              ),
+              Text("Language Proficiency"),
+              Row(
                 children: <Widget>[
-                  Expanded(
-                    child: RadioListTile(
-                      title: Text(Major.CS.toString().split(".")[1]),
-                      value: Major.CS,
-                      groupValue: profile.major,
-                      onChanged: con.onChangedMajor,
-                    ),
+                  Checkbox(
+                    value: profile.languages[Language.Dart],
+                    onChanged: con.onChangedDart,
                   ),
-                  Expanded(
-                    child: RadioListTile(
-                      title: Text(Major.SE.toString().split(".")[1]),
-                      value: Major.SE,
-                      groupValue: profile.major,
-                      onChanged: con.onChangedMajor,
-                    ),
+                  Text(Language.Dart.toString().split(".")[1]),
+                  Checkbox(
+                    value: profile.languages[Language.Java],
+                    onChanged: con.onChangedJava,
                   ),
-                  Expanded(
-                    child: RadioListTile(
-                      title: Text(Major.Other.toString().split(".")[1]),
-                      value: Major.Other,
-                      groupValue: profile.major,
-                      onChanged: con.onChangedMajor,
-                    ),
+                  Text(Language.Java.toString().split(".")[1]),
+                  Checkbox(
+                    value: profile.languages[Language.Cpp],
+                    onChanged: con.onChangedCpp,
                   ),
+                  Text("C++"),
                 ],
-              ),
-            ),
-            Text("Classification"),
-            DropdownButtonFormField(
-              hint: Text("Classification"),
-              value: profile.classification,
-              onChanged: con.onChangedClassification,
-              items: con.getClassificationList(),
-              
-            ),
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -143,22 +167,48 @@ class _Controller {
     _state.profile.age = int.parse(value);
   }
 
-  void onChangedMajor(Major m){
-    _state.render((){
+  void onChangedMajor(Major m) {
+    _state.render(() {
       _state.profile.major = m;
-      });
+    });
   }
 
-  void onChangedClassification(Classification c){
+  void onChangedClassification(Classification c) {
     _state.profile.classification = c;
   }
 
-  List getClassificationList(){
+  List getClassificationList() {
     return Classification.values.map((c) {
       return DropdownMenuItem(
         value: c,
         child: Text(c.toString().split(".")[1]),
       );
     }).toList();
+  }
+
+  void onChangedDart(bool checked) {
+    _state.render(() {
+      _state.profile.languages[Language.Dart] = checked;
+    });
+  }
+
+  void onChangedJava(bool checked) {
+    _state.render(() {
+      _state.profile.languages[Language.Java] = checked;
+    });
+  }
+
+  void onChangedCpp(bool checked) {
+    _state.render(() {
+      _state.profile.languages[Language.Cpp] = checked;
+    });
+  }
+
+  void save() {
+    if (_state.formKey.currentState.validate()) {
+      _state.formKey.currentState.save();
+      //navigate back
+      Navigator.pop(_state.context, _state.profile);
+    }
   }
 }

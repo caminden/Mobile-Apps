@@ -32,4 +32,11 @@ Profile({
   this.major = Major.CS,
   });
 
+Profile.clone(Profile p){
+  this.name = p.name;
+  this.age = p.age;
+  this.classification = p.classification;
+  this. major = p.major;
+  this.languages = Map.from(p.languages);
+}
 }

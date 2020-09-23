@@ -22,6 +22,8 @@ class _ProfileState extends State<ProfileDemoScreen> {
     con = _Controller(this);
   }
 
+  void render(fn) => setState(fn);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -37,12 +39,12 @@ class _ProfileState extends State<ProfileDemoScreen> {
         ),
         body: SingleChildScrollView(
             child: Container(
-              margin: EdgeInsets.all(10.0),
-              padding: EdgeInsets.all(20.0),
-              color: Colors.blue[200],
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+          margin: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(20.0),
+          color: Colors.blue[200],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
               Text(
                 "Name: ${con.profile.name}",
                 style: TextStyle(fontSize: 20.0),
@@ -60,7 +62,10 @@ class _ProfileState extends State<ProfileDemoScreen> {
                 style: TextStyle(fontSize: 20.0),
               ),
               SizedBox(height: 20.0),
-              Text("Languages Proficiency", style: TextStyle(fontSize: 20.0),),
+              Text(
+                "Languages Proficiency",
+                style: TextStyle(fontSize: 20.0),
+              ),
               Row(
                 children: <Widget>[
                   Checkbox(
@@ -88,9 +93,9 @@ class _ProfileState extends State<ProfileDemoScreen> {
                   Text("Cpp"),
                 ],
               ),
-          ],
-        ),
-            )));
+            ],
+          ),
+        )));
   }
 }
 
@@ -99,8 +104,14 @@ class _Controller {
   _Controller(this._state);
   Profile profile = Profile();
 
-void edit(){
-  Navigator.pushNamed(_state.context, ProfileEditScreen.routeName, arguments: profile);
-}
-
+  void edit() async {
+    var result = await Navigator.pushNamed(
+        _state.context, ProfileEditScreen.routeName,
+        arguments: Profile.clone(profile));
+    if (result != null) {
+      //only if saved pressed
+      _state.render(() => profile = result);
+    }
+    
+  }
 }
