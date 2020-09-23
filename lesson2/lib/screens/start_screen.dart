@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lesson2/screens/counterdemo_screen.dart';
 import 'package:lesson2/screens/formdemoscreen.dart';
 import 'package:lesson2/screens/listdemo_screen.dart';
+import 'package:lesson2/screens/profiledemo_screen.dart';
 import 'package:lesson2/screens/taponlist_screen.dart';
 import 'package:lesson2/screens/widgetlifecycle_screen.dart';
 
@@ -38,6 +39,10 @@ class StartScreen extends StatelessWidget {
             RaisedButton(
               onPressed: () => Navigator.pushNamed(context, FormDemoScreen.routeName),
               child: Text("Form Demo"),
+            ),
+            RaisedButton(
+              onPressed: () => Navigator.pushNamed(context, ProfileDemoScreen.routeName),
+              child: Text("Profile Edit Demo"),
             ),
           ],
         ),

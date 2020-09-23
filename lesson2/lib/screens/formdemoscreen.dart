@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lesson2/screens/userhome_screen.dart';
 
 class FormDemoScreen extends StatefulWidget {
   static const routeName = '/formDemoScreen';
@@ -12,6 +13,7 @@ class FormDemoScreen extends StatefulWidget {
 
 class _FormDemoScreen extends State<FormDemoScreen> {
   _Controller con;
+  String errorMessage;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -38,6 +40,14 @@ class _FormDemoScreen extends State<FormDemoScreen> {
               "Sign in please",
               style: TextStyle(fontSize: 20.0),
             ),
+            errorMessage == null
+                ? SizedBox(
+                    height: 1.0,
+                  )
+                : Text(
+                    errorMessage,
+                    style: TextStyle(fontSize: 15.0, color: Colors.red),
+                  ),
             TextFormField(
               decoration: InputDecoration(
                 icon: Icon(Icons.email),
@@ -58,6 +68,10 @@ class _FormDemoScreen extends State<FormDemoScreen> {
               validator: con.validatorPassword,
               onSaved: con.onSavedPassword,
             ),
+            RaisedButton(
+              child: Text("Sign in"),
+              onPressed: con.signIn,
+            )
           ]),
         ),
       ),
@@ -70,30 +84,43 @@ class _Controller {
   _Controller(this._state);
   Map userInfo = {};
 
+  void signIn() {
+    if (_state.formKey.currentState.validate()) {
+      _state.formKey.currentState.save();
+      if (userInfo['password'] != 'pppp') {
+        _state.render((){
+          _state.errorMessage = "Incorrect email/password";
+        });
+        return;
+      }
+      //print('***********' + userInfo.toString());
+
+      //successful sign in
+      Navigator.pushNamed(_state.context, UserHomeScreen.routeName, arguments: userInfo);
+    }
+  }
+
   String validatorEmail(String value) {
-    if(value.contains('@') && value.contains('.')){
+    if (value.contains('@') && value.contains('.')) {
       return null;
-    }
-    else{
-      return 'not valuid email format';
+    } else {
+      return 'not valid email format';
     }
   }
 
-  void onSavedEmail(String value){
-      userInfo['email'] = value;
+  void onSavedEmail(String value) {
+    userInfo['email'] = value;
   }
 
-  String validatorPassword(String value){
-    if(value.length < 4){
+  String validatorPassword(String value) {
+    if (value.length < 4) {
       return "min 4 chars";
-    }
-    else{
+    } else {
       return null;
     }
   }
 
-  void onSavedPassword(String value){
+  void onSavedPassword(String value) {
     userInfo['password'] = value;
   }
-
 }

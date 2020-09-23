@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:lesson2/screens/counterdemo_screen.dart';
 import 'package:lesson2/screens/formdemoscreen.dart';
 import 'package:lesson2/screens/listdemo_screen.dart';
+import 'package:lesson2/screens/profiledemo_screen.dart';
 import 'package:lesson2/screens/start_screen.dart';
 import 'package:lesson2/screens/taponlist_screen.dart';
+import 'package:lesson2/screens/userhome_screen.dart';
 import 'package:lesson2/screens/widgetlifecycle_screen.dart';
 
 void main() {
@@ -24,6 +26,8 @@ class lesson2App extends StatelessWidget {
         ListDemoScreen.routeName: (context) => ListDemoScreen(),
         TapOnListScreen.routeName: (context) => TapOnListScreen(),
         FormDemoScreen.routeName: (context) => FormDemoScreen(),
+        UserHomeScreen.routeName: (context) => UserHomeScreen(),
+        ProfileDemoScreen.routeName: (context) => ProfileDemoScreen(),
       },
     );
   }
