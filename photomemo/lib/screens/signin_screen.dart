@@ -110,7 +110,8 @@ class _Controller {
     //sign in success
     //read photomemos from firebase
     try {
-      List<PhotoMemo> photoMemos = await FirebaseController.getPhotoMemos(user.email);
+      List<PhotoMemo> photoMemos =
+          await FirebaseController.getPhotoMemos(user.email);
       MyDialog.circularProgressEnd(_state.context);
       //navigate to home
       Navigator.pushReplacementNamed(_state.context, HomeScreen.routeName,
@@ -120,11 +121,10 @@ class _Controller {
       MyDialog.info(
         context: _state.context,
         title: 'Firebase/Firestore error',
-        content: 'Cannot get photo memo document. Try again later\n ${e.message}',
+        content:
+            'Cannot get photo memo document. Try again later\n ${e.message}',
       );
     }
-
-    //navigate to home screen to display photomemos
   }
 
   String validatorEmail(String s) {
