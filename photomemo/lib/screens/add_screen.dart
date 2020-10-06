@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photomemo/controller/firebasecontroller.dart';
+import 'package:photomemo/model/photomemo.dart';
 
 class AddScreen extends StatefulWidget {
   static const routeName = '/home/addScreen';
@@ -17,6 +20,8 @@ class _AddState extends State<AddScreen> {
   _Controller con;
   File image;
   var formKey = GlobalKey<FormState>();
+  FirebaseUser user;
+  List<PhotoMemo> photoMemos;
 
   @override
   void initState() {
@@ -29,7 +34,9 @@ class _AddState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //ModalRoute.of(context).settings.arguments;
+    Map args = ModalRoute.of(context).settings.arguments;
+    user = args['user'];
+    photoMemos = args['photoMemoList'];
     return Scaffold(
       appBar: AppBar(
         title: Text("Add"),
@@ -42,7 +49,7 @@ class _AddState extends State<AddScreen> {
       ),
       body: Form(
         key: formKey,
-              child: SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Stack(
@@ -132,33 +139,45 @@ class _Controller {
   List<String> sharedWith = [];
 
   void save() async {
-    if(!_state.formKey.currentState.validate()){
+    if (!_state.formKey.currentState.validate()) {
       return;
     }
 
     _state.formKey.currentState.save();
 
-    print("***************************");
-    print(title);
-    print(memo);
-    print(sharedWith.toString());
+    //upload picture to firestore
+    Map<String, String> photoInfo = await FirebaseController.uploadStorage(
+        image: _state.image, uid: _state.user.uid, sharedWith: sharedWith);
+    //get image labels by MLkit
+    //save photomemo document to firestore
+    var p = PhotoMemo(
+      title: title,
+      memo: memo,
+      photoPath: photoInfo['path'],
+      photoURL: photoInfo['url'],
+      createdBy: _state.user.email,
+      sharedWith: sharedWith,
+      updatedAt: DateTime.now(),
+    );
+
+    p.docId = await FirebaseController.addPhotoMemo(p);
+    _state.photoMemos.insert(0, p);
+
+    Navigator.pop(_state.context);
   }
 
   void getPicture(String src) async {
-    try{
+    try {
       PickedFile _imageFile;
-      if(src == "camera"){
+      if (src == "camera") {
         _imageFile = await ImagePicker().getImage(source: ImageSource.camera);
-      }
-      else{
+      } else {
         _imageFile = await ImagePicker().getImage(source: ImageSource.gallery);
       }
-      _state.render((){
+      _state.render(() {
         _state.image = File(_imageFile.path);
       });
-    }catch(e){
-
-    }
+    } catch (e) {}
   }
 
   String validatorTitle(String value) {
