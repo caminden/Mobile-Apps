@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photomemo/controller/firebasecontroller.dart';
+import 'package:photomemo/model/photomemo.dart';
+import 'package:photomemo/screens/home_screen.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -31,9 +34,23 @@ class _SignInState extends State<SignInScreen> {
         body: SingleChildScrollView(
             child: Form(
           key: formKey,
-          child: Column(
-            children: <Widget>[
-            Image.asset('assets/images/postit.png'),
+          child: Column(children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Image.asset('assets/images/postit.png'),
+                Positioned(
+                  top: 100.0,
+                  left: 105.0,
+                  child: Text(
+                    "PhotoMemo",
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontSize: 25.0,
+                        fontFamily: 'Audiowide'),
+                  ),
+                ),
+              ],
+            ),
             TextFormField(
               decoration: InputDecoration(
                 hintText: "Email",
@@ -74,19 +91,35 @@ class _Controller {
       return;
     }
     _state.formKey.currentState.save();
-    print(" === email: $email      password: $password");
-    
-    try{
-      var user = await FirebaseController.signIn(email, password);
+
+    FirebaseUser user;
+    try {
+      user = await FirebaseController.signIn(email, password);
       print("USER: $user");
-    }catch(e){
+    } catch (e) {
       MyDialog.info(
         context: _state.context,
         title: 'Sign In Error',
         content: e.message ?? e.toString(),
       );
+      return;
+    }
+    //sign in success
+    //read photomemos from firebase
+    try {
+      List<PhotoMemo> photoMemos = await FirebaseController.getPhotoMemos(user.email);
+      //navigate to home
+      Navigator.pushNamed(_state.context, HomeScreen.routeName,
+          arguments: {'user': user, 'photoMemoList': photoMemos});
+    } catch (e) {
+      MyDialog.info(
+        context: _state.context,
+        title: 'Firebase/Firestore error',
+        content: 'Cannot get photo memo document. Try again later\n ${e.message}',
+      );
     }
 
+    //navigate to home screen to display photomemos
   }
 
   String validatorEmail(String s) {
