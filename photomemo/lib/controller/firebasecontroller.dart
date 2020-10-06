@@ -14,7 +14,9 @@ class FirebaseController {
 
   static Future<List<PhotoMemo>>getPhotoMemos(String email) async {
     QuerySnapshot querySnapShot = await Firestore.instance
-      .collection(PhotoMemo.COLLECTION).getDocuments();
+      .collection(PhotoMemo.COLLECTION)
+      .where(PhotoMemo.CREATED_BY, isEqualTo: email)
+      .getDocuments();
     
     var result = <PhotoMemo>[];
     if(querySnapShot != null && querySnapShot.documents.length != 0){
@@ -22,8 +24,10 @@ class FirebaseController {
         result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
       }
     }
-    
     return result;
+  }
 
+  static Future<void> signOut()async{
+    await FirebaseAuth.instance.signOut();
   }
 }

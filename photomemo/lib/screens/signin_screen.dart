@@ -92,11 +92,14 @@ class _Controller {
     }
     _state.formKey.currentState.save();
 
+    MyDialog.circularProgressStart(_state.context);
+
     FirebaseUser user;
     try {
       user = await FirebaseController.signIn(email, password);
       print("USER: $user");
     } catch (e) {
+      MyDialog.circularProgressEnd(_state.context);
       MyDialog.info(
         context: _state.context,
         title: 'Sign In Error',
@@ -108,10 +111,12 @@ class _Controller {
     //read photomemos from firebase
     try {
       List<PhotoMemo> photoMemos = await FirebaseController.getPhotoMemos(user.email);
+      MyDialog.circularProgressEnd(_state.context);
       //navigate to home
-      Navigator.pushNamed(_state.context, HomeScreen.routeName,
+      Navigator.pushReplacementNamed(_state.context, HomeScreen.routeName,
           arguments: {'user': user, 'photoMemoList': photoMemos});
     } catch (e) {
+      MyDialog.circularProgressEnd(_state.context);
       MyDialog.info(
         context: _state.context,
         title: 'Firebase/Firestore error',
