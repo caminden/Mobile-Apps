@@ -8,6 +8,8 @@ class PhotoMemo {
   static const UPDATED_AT = 'updatedAt';
   static const CREATED_BY = 'createdBy';
   static const IMAGE_FOLDER = 'photoMemoPictures';
+  static const SHARED_WITH = 'sharedWith';
+  static const IMAGE_LABELS = 'imageLabels';
 
   String docId; //firestore document id
   String createdBy;
@@ -16,6 +18,8 @@ class PhotoMemo {
   String photoPath; //firebase storage: image file name
   String photoURL; //firebase storage: image url for internet access
   DateTime updatedAt; //created or revised time
+  List<dynamic> sharedWith; //list of emails
+  List<dynamic> imageLabels; //list of words from ML algorithm
 
   PhotoMemo({
     this.docId,
@@ -25,7 +29,12 @@ class PhotoMemo {
     this.photoPath,
     this.photoURL,
     this.updatedAt,
-  });
+    this.sharedWith,
+    this.imageLabels,
+  }){
+    this.sharedWith ??= [];
+    this.imageLabels ??= [];
+  }
 
   //convert dart object to firestore document (noSQL)
   Map<String, dynamic> serialize() {
@@ -36,6 +45,8 @@ class PhotoMemo {
       PHOTO_PATH: photoPath,
       PHOTO_URL: photoURL,
       UPDATED_AT: updatedAt,
+      SHARED_WITH: sharedWith,
+      IMAGE_LABELS: imageLabels,
     };
   }
 
@@ -50,6 +61,8 @@ class PhotoMemo {
       photoURL: data[PhotoMemo.PHOTO_URL],
       updatedAt: data[PhotoMemo.UPDATED_AT] != null ? 
         DateTime.fromMillisecondsSinceEpoch(data[PhotoMemo.UPDATED_AT].millisecondsSinceEpoch) : null,
+      sharedWith: data[PhotoMemo.SHARED_WITH],
+      imageLabels: data[PhotoMemo.IMAGE_LABELS],
     );
   }
 
