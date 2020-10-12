@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:photomemo/controller/firebasecontroller.dart';
 import 'package:photomemo/model/photomemo.dart';
 import 'package:photomemo/screens/add_screen.dart';
+import 'package:photomemo/screens/detailed_screen.dart';
 import 'package:photomemo/screens/signin_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -67,15 +68,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemBuilder: (BuildContext context, int index) => 
                 ListTile(
                   leading: Image.network(photoMemos[index].photoURL),
+                  trailing: Icon(Icons.keyboard_arrow_right),
                   title: Text(photoMemos[index].title),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text("Created by: ${photoMemos[index].createdBy}"),
+                      Text("Sharedwith: ${photoMemos[index].sharedWith}"),
                       Text("Updated at: ${photoMemos[index].updatedAt}"),
                       Text(photoMemos[index].memo),
                     ]
                   ),
+                  onTap: () => con.onTap(index),
                 ),
               ),
       ),
@@ -86,6 +90,13 @@ class _HomeScreenState extends State<HomeScreen> {
 class _Controller {
   _HomeScreenState _state;
   _Controller(this._state);
+
+  void onTap(int index){
+    Navigator.pushNamed(_state.context, DetailedScreen.routeName,
+    arguments: {'user': _state.user, 'photoMemo': _state.photoMemos[index]});
+    
+    
+  }
 
   void signOut() async {
     try {
