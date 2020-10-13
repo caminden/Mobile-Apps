@@ -5,6 +5,8 @@ import 'package:photomemo/model/photomemo.dart';
 import 'package:photomemo/screens/add_screen.dart';
 import 'package:photomemo/screens/detailed_screen.dart';
 import 'package:photomemo/screens/signin_screen.dart';
+import 'package:photomemo/screens/views/mydialog.dart';
+import 'package:photomemo/screens/views/myimageview.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = 'signInScreen/homeScreen';
@@ -20,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   _Controller con;
   FirebaseUser user;
   List<PhotoMemo> photoMemos;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -40,19 +43,19 @@ class _HomeScreenState extends State<HomeScreen> {
       onWillPop: () => Future.value(false),
       child: Scaffold(
         drawer: Drawer(
-            child: ListView(
-          children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountEmail: Text(user.email),
-              accountName: Text(user.displayName ?? "N/A"),
-            ),
-            ListTile(
-              leading: Icon(Icons.exit_to_app),
-              title: Text("Sign out"),
-              onTap: con.signOut,
-            )
-          ],
-        ),
+          child: ListView(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountEmail: Text(user.email),
+                accountName: Text(user.displayName ?? "N/A"),
+              ),
+              ListTile(
+                leading: Icon(Icons.exit_to_app),
+                title: Text("Sign out"),
+                onTap: con.signOut,
+              )
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
@@ -60,26 +63,58 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         appBar: AppBar(
           title: Text("Home"),
+          actions: <Widget>[
+            Container(
+              width: 180.0,
+              child: Form(
+                key: formKey,
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Image Search",
+                    fillColor: Colors.white,
+                    filled: true,
+                  ),
+                  autocorrect: false,
+                  onSaved: con.onSavedSearchKey,
+                ),
+              ),
+            ),
+            con.delIndex == null
+                ? IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: con.search,
+                  )
+                : IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: con.delete,
+                  ),
+          ],
         ),
         body: photoMemos.length == 0
             ? Text("No Photo Memos", style: TextStyle(fontSize: 30.0))
             : ListView.builder(
                 itemCount: photoMemos.length,
-                itemBuilder: (BuildContext context, int index) => 
-                ListTile(
-                  leading: Image.network(photoMemos[index].photoURL),
-                  trailing: Icon(Icons.keyboard_arrow_right),
-                  title: Text(photoMemos[index].title),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text("Created by: ${photoMemos[index].createdBy}"),
-                      Text("Sharedwith: ${photoMemos[index].sharedWith}"),
-                      Text("Updated at: ${photoMemos[index].updatedAt}"),
-                      Text(photoMemos[index].memo),
-                    ]
+                itemBuilder: (BuildContext context, int index) => Container(
+                  color: con.delIndex != null && con.delIndex == index
+                      ? Colors.red[200]
+                      : Colors.white,
+                  child: ListTile(
+                    leading: MyImageView.network(
+                        imageUrl: photoMemos[index].photoURL, context: context),
+                    //leading: Image.network(photoMemos[index].photoURL),
+                    trailing: Icon(Icons.keyboard_arrow_right),
+                    title: Text(photoMemos[index].title),
+                    subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text("Created by: ${photoMemos[index].createdBy}"),
+                          Text("Sharedwith: ${photoMemos[index].sharedWith}"),
+                          Text("Updated at: ${photoMemos[index].updatedAt}"),
+                          Text(photoMemos[index].memo),
+                        ]),
+                    onTap: () => con.onTap(index),
+                    onLongPress: () => con.onLongPress(index),
                   ),
-                  onTap: () => con.onTap(index),
                 ),
               ),
       ),
@@ -90,12 +125,25 @@ class _HomeScreenState extends State<HomeScreen> {
 class _Controller {
   _HomeScreenState _state;
   _Controller(this._state);
+  int delIndex;
+  String searchKey;
 
-  void onTap(int index){
-    Navigator.pushNamed(_state.context, DetailedScreen.routeName,
-    arguments: {'user': _state.user, 'photoMemo': _state.photoMemos[index]});
-    
-    
+  void onLongPress(int index) {
+    _state.render(() {
+      delIndex = (delIndex == index ? null : index); //toggle functionality
+    });
+  }
+
+  void onTap(int index) {
+    if (delIndex != null) {
+      //cancel delete mode
+      _state.render(() => delIndex = null);
+      return;
+    }
+    Navigator.pushNamed(_state.context, DetailedScreen.routeName, arguments: {
+      'user': _state.user,
+      'photoMemo': _state.photoMemos[index]
+    });
   }
 
   void signOut() async {
@@ -110,7 +158,32 @@ class _Controller {
   void addButton() async {
     //navigate to add screen to add images
     await Navigator.pushNamed(_state.context, AddScreen.routeName,
-    arguments: {'user': _state.user, 'photoMemoList': _state.photoMemos});
-    _state.render((){});
+        arguments: {'user': _state.user, 'photoMemoList': _state.photoMemos});
+    _state.render(() {});
+  }
+
+  void delete() async {
+    try {
+      PhotoMemo photoMemo = _state.photoMemos[delIndex];
+      await FirebaseController.deletePhotoMemo(photoMemo);
+      _state.render(() {
+        _state.photoMemos.removeAt(delIndex);
+      });
+    } catch (e) {
+      MyDialog.info(
+        context: _state.context,
+        title: "Delete Photomemo error",
+        content: e.message ?? e.toString(),
+      );
+    }
+  }
+
+  void onSavedSearchKey(String value){
+    searchKey = value;
+  }
+
+  void search() {
+    _state.formKey.currentState.save();
+    print("********** search key = $searchKey");
   }
 }

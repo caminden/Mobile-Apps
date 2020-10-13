@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photomemo/model/photomemo.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
+import 'package:photomemo/screens/views/myimageview.dart';
 
 class DetailedScreen extends StatefulWidget {
   static const routeName = '/homeScreen/detailedScreen';
@@ -41,7 +42,7 @@ class _DetailedState extends State<DetailedScreen> {
               children: <Widget>[
                 Container(
                   width: MediaQuery.of(context).size.width,
-                  child: Image.network(photoMemo.photoURL),
+                  child: MyImageView.network(imageUrl: photoMemo.photoURL, context: context),
                 ),
                 Positioned(
                   bottom: 0.0,
