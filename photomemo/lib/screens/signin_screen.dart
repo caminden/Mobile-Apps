@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:photomemo/controller/firebasecontroller.dart';
 import 'package:photomemo/model/photomemo.dart';
 import 'package:photomemo/screens/home_screen.dart';
+import 'package:photomemo/screens/signup_screen.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -28,55 +29,69 @@ class _SignInState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Sign In"),
-        ),
-        body: SingleChildScrollView(
-            child: Form(
+      appBar: AppBar(
+        title: Text("Sign In"),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
           key: formKey,
-          child: Column(children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Image.asset('assets/images/postit.png'),
-                Positioned(
-                  top: 100.0,
-                  left: 105.0,
-                  child: Text(
-                    "PhotoMemo",
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 25.0,
-                        fontFamily: 'Audiowide'),
+          child: Column(
+            children: <Widget>[
+              Stack(
+                children: <Widget>[
+                  Image.asset('assets/images/postit.png'),
+                  Positioned(
+                    top: 100.0,
+                    left: 105.0,
+                    child: Text(
+                      "PhotoMemo",
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 25.0,
+                          fontFamily: 'Audiowide'),
+                    ),
                   ),
+                ],
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Email",
                 ),
-              ],
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: "Email",
+                keyboardType: TextInputType.emailAddress,
+                autocorrect: false,
+                validator: con.validatorEmail,
+                onSaved: con.onSavedEmail,
               ),
-              keyboardType: TextInputType.emailAddress,
-              autocorrect: false,
-              validator: con.validatorEmail,
-              onSaved: con.onSavedEmail,
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                hintText: "Password",
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Password",
+                ),
+                autocorrect: false,
+                obscureText: true,
+                validator: con.validatorPassword,
+                onSaved: con.onSavedPassword,
               ),
-              autocorrect: false,
-              obscureText: true,
-              validator: con.validatorPassword,
-              onSaved: con.onSavedPassword,
-            ),
-            RaisedButton(
-              onPressed: con.signIn,
-              child: Text("Sign In",
-                  style: TextStyle(fontSize: 20.0, color: Colors.white)),
-              color: Colors.blue,
-            )
-          ]),
-        )));
+              RaisedButton(
+                onPressed: con.signIn,
+                child: Text("Sign In",
+                    style: TextStyle(fontSize: 20.0, color: Colors.white)),
+                color: Colors.blue,
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              FlatButton(
+                onPressed: con.signUp,
+                child: Text(
+                  "No account? Sign up here",
+                  style: TextStyle(fontSize: 15.0),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -85,6 +100,10 @@ class _Controller {
   _Controller(this._state);
   String email;
   String password;
+
+  void signUp() async {
+    Navigator.pushNamed(_state.context, SignUpScreen.routeName);
+  }
 
   void signIn() async {
     if (!_state.formKey.currentState.validate()) {
@@ -97,7 +116,7 @@ class _Controller {
     FirebaseUser user;
     try {
       user = await FirebaseController.signIn(email, password);
-      print("USER: $user");
+      //print("USER: $user");
     } catch (e) {
       MyDialog.circularProgressEnd(_state.context);
       MyDialog.info(

@@ -11,6 +11,7 @@ class PhotoMemo {
   static const SHARED_WITH = 'sharedWith';
   static const IMAGE_LABELS = 'imageLabels';
   static const MIN_CONFIDENCE = 0.7;
+  static const PROFILE_FOLDER = 'profilePictures';
 
   String docId; //firestore document id
   String createdBy;

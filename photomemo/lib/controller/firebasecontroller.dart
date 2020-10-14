@@ -109,8 +109,8 @@ class FirebaseController {
         .getDocuments();
 
     var result = <PhotoMemo>[];
-    if(querySnapshot != null && querySnapshot.documents.length != 0){
-      for(var doc in querySnapshot.documents){
+    if (querySnapshot != null && querySnapshot.documents.length != 0) {
+      for (var doc in querySnapshot.documents) {
         result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
       }
     }
@@ -118,28 +118,65 @@ class FirebaseController {
   }
 
   //function
-  static Future<void> updatePhotoMemo(PhotoMemo photoMemo)async{
+  static Future<void> updatePhotoMemo(PhotoMemo photoMemo) async {
     photoMemo.updatedAt = DateTime.now();
-    await Firestore.instance.collection(PhotoMemo.COLLECTION)
-    .document(photoMemo.docId)
-    .setData(photoMemo.serialize());
+    await Firestore.instance
+        .collection(PhotoMemo.COLLECTION)
+        .document(photoMemo.docId)
+        .setData(photoMemo.serialize());
   }
 
   //function
-  static Future<List<PhotoMemo>>getPhotoMemosSharedWithMe(String email) async {
+  static Future<List<PhotoMemo>> getPhotoMemosSharedWithMe(String email) async {
     QuerySnapshot querySnapshot = await Firestore.instance
-    .collection(PhotoMemo.COLLECTION)
-    .where(PhotoMemo.SHARED_WITH, arrayContains: email)
-    .orderBy(PhotoMemo.UPDATED_AT, descending: true)
-    .getDocuments();
+        .collection(PhotoMemo.COLLECTION)
+        .where(PhotoMemo.SHARED_WITH, arrayContains: email)
+        .orderBy(PhotoMemo.UPDATED_AT, descending: true)
+        .getDocuments();
 
-  var result = <PhotoMemo>[];
-  if(querySnapshot != null && querySnapshot.documents.length != 0){
-    for(var doc in querySnapshot.documents){
-      result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
+    var result = <PhotoMemo>[];
+    if (querySnapshot != null && querySnapshot.documents.length != 0) {
+      for (var doc in querySnapshot.documents) {
+        result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
+      }
     }
-  }
-  return result;
+    return result;
   }
 
+  //function
+  static Future<void> signUp(String email, String password) async {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+  }
+
+  //function
+  static Future<void> updateProfile({
+    @required File image, // null = no update
+    @required String displayName,
+    @required FirebaseUser user,
+    @required Function progressListener,
+  }) async {
+    UserUpdateInfo updateInfo = UserUpdateInfo();
+    updateInfo.displayName = displayName;
+    if (image != null) {
+      String filePath =
+          '${PhotoMemo.PROFILE_FOLDER}/${user.uid}/${user.uid}'; //can change to allow for multiple pics
+      StorageUploadTask uploadTask =
+          FirebaseStorage.instance.ref().child(filePath).putFile(image);
+
+      uploadTask.events.listen((event) {
+        double percentage = event.snapshot.bytesTransferred.toDouble() /
+            event.snapshot.totalByteCount.toDouble() *
+            100;
+        progressListener(percentage);
+      });
+
+      var download = await uploadTask.onComplete;
+      String url = await download.ref.getDownloadURL();
+
+      updateInfo.photoUrl = url;
+    }
+
+    await user.updateProfile(updateInfo);
+  }
 }

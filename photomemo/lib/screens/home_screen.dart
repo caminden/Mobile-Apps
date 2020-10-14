@@ -5,6 +5,8 @@ import 'package:photomemo/controller/firebasecontroller.dart';
 import 'package:photomemo/model/photomemo.dart';
 import 'package:photomemo/screens/add_screen.dart';
 import 'package:photomemo/screens/detailed_screen.dart';
+import 'package:photomemo/screens/settings_screen.dart';
+import 'package:photomemo/screens/sharedwith_screen.dart';
 import 'package:photomemo/screens/signin_screen.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
 import 'package:photomemo/screens/views/myimageview.dart';
@@ -47,6 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
+                currentAccountPicture: ClipOval(
+                  child: MyImageView.network(
+                    imageUrl: user.photoUrl,
+                    context: context,
+                  ),
+                ),
                 accountEmail: Text(user.email),
                 accountName: Text(user.displayName ?? "N/A"),
               ),
@@ -59,7 +67,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 leading: Icon(Icons.exit_to_app),
                 title: Text("Sign out"),
                 onTap: con.signOut,
-              )
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text("Setting"),
+                onTap: con.settings,
+              ),
             ],
           ),
         ),
@@ -134,16 +147,29 @@ class _Controller {
   int delIndex;
   String searchKey;
 
+  void settings() async {
+    await Navigator.pushNamed(_state.context, SettingsScreen.routeName,
+        arguments: _state.user);
+
+    //get updated user profile
+    await _state.user.reload();
+    _state.user = await FirebaseAuth.instance.currentUser();
+
+    Navigator.pop(_state.context);
+  }
+
   void sharedWith() async {
-    try{
-      List<PhotoMemo> sharedPhotoMemos = 
-      await FirebaseController.getPhotoMemosSharedWithMe(_state.user.email);
+    try {
+      List<PhotoMemo> sharedPhotoMemos =
+          await FirebaseController.getPhotoMemosSharedWithMe(_state.user.email);
 
-      print('************* shared with me');
-      print(sharedPhotoMemos.toString());
-    }catch(e){
-
-    }
+      await Navigator.pushNamed(_state.context, SharedWithScreen.routeName,
+          arguments: {
+            'user': _state.user,
+            'sharedPhotoMemoList': sharedPhotoMemos
+          });
+      Navigator.pop(_state.context);
+    } catch (e) {}
   }
 
   void onLongPress(int index) {
@@ -158,11 +184,13 @@ class _Controller {
       _state.render(() => delIndex = null);
       return;
     }
-    await Navigator.pushNamed(_state.context, DetailedScreen.routeName, arguments: {
-      'user': _state.user,
-      'photoMemo': _state.photoMemos[index]
-    });
-    _state.render((){}); //can make so takes a return value from detailedscreen to determine if it needs to refresh or not
+    await Navigator.pushNamed(_state.context, DetailedScreen.routeName,
+        arguments: {
+          'user': _state.user,
+          'photoMemo': _state.photoMemos[index]
+        });
+    _state.render(
+        () {}); //can make so takes a return value from detailedscreen to determine if it needs to refresh or not
   }
 
   void signOut() async {
@@ -214,6 +242,6 @@ class _Controller {
         imageLabel: searchKey,
       );
     }
-    _state.render(()=> _state.photoMemos = result);
+    _state.render(() => _state.photoMemos = result);
   }
 }
