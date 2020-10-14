@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photomemo/model/photomemo.dart';
+import 'package:photomemo/screens/edit_screen.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
 import 'package:photomemo/screens/views/myimageview.dart';
 
@@ -24,6 +25,8 @@ class _DetailedState extends State<DetailedScreen> {
     con = _Controller(this);
   }
 
+  void render(fn) => setState(fn);
+
   @override
   Widget build(BuildContext context) {
     Map args = ModalRoute.of(context).settings.arguments;
@@ -33,6 +36,12 @@ class _DetailedState extends State<DetailedScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Detailed View"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: con.edit,
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -79,5 +88,11 @@ class _Controller {
       title: "Image labels by ML",
       content: _state.photoMemo.imageLabels.toString(),
       );
+  }
+
+  void edit() async {
+   await Navigator.pushNamed(_state.context, EditScreen.routeName,
+    arguments: {'user': _state.user, 'photoMemo': _state.photoMemo});
+  _state.render((){});
   }
 }

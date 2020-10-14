@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:photomemo/controller/firebasecontroller.dart';
 import 'package:photomemo/model/photomemo.dart';
@@ -134,16 +135,17 @@ class _Controller {
     });
   }
 
-  void onTap(int index) {
+  void onTap(int index) async {
     if (delIndex != null) {
       //cancel delete mode
       _state.render(() => delIndex = null);
       return;
     }
-    Navigator.pushNamed(_state.context, DetailedScreen.routeName, arguments: {
+    await Navigator.pushNamed(_state.context, DetailedScreen.routeName, arguments: {
       'user': _state.user,
       'photoMemo': _state.photoMemos[index]
     });
+    _state.render((){}); //can make so takes a return value from detailedscreen to determine if it needs to refresh or not
   }
 
   void signOut() async {
@@ -178,12 +180,23 @@ class _Controller {
     }
   }
 
-  void onSavedSearchKey(String value){
+  void onSavedSearchKey(String value) {
     searchKey = value;
   }
 
-  void search() {
+  void search() async {
     _state.formKey.currentState.save();
-    print("********** search key = $searchKey");
+
+    var result;
+    if (searchKey == null || searchKey.trim().isEmpty) {
+      //read all documednts option
+      result = await FirebaseController.getPhotoMemos(_state.user.email);
+    } else {
+      result = await FirebaseController.searchImages(
+        email: _state.user.email,
+        imageLabel: searchKey,
+      );
+    }
+    _state.render(()=> _state.photoMemos = result);
   }
 }
