@@ -51,6 +51,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 accountName: Text(user.displayName ?? "N/A"),
               ),
               ListTile(
+                leading: Icon(Icons.people),
+                title: Text("Shared with Me"),
+                onTap: con.sharedWith,
+              ),
+              ListTile(
                 leading: Icon(Icons.exit_to_app),
                 title: Text("Sign out"),
                 onTap: con.signOut,
@@ -128,6 +133,18 @@ class _Controller {
   _Controller(this._state);
   int delIndex;
   String searchKey;
+
+  void sharedWith() async {
+    try{
+      List<PhotoMemo> sharedPhotoMemos = 
+      await FirebaseController.getPhotoMemosSharedWithMe(_state.user.email);
+
+      print('************* shared with me');
+      print(sharedPhotoMemos.toString());
+    }catch(e){
+
+    }
+  }
 
   void onLongPress(int index) {
     _state.render(() {
