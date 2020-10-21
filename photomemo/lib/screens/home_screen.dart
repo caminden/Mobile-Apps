@@ -8,6 +8,7 @@ import 'package:photomemo/screens/detailed_screen.dart';
 import 'package:photomemo/screens/settings_screen.dart';
 import 'package:photomemo/screens/sharedwith_screen.dart';
 import 'package:photomemo/screens/signin_screen.dart';
+import 'package:photomemo/screens/usersearch_screen.dart';
 import 'package:photomemo/screens/views/mydialog.dart';
 import 'package:photomemo/screens/views/myimageview.dart';
 
@@ -73,6 +74,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: Text("Setting"),
                 onTap: con.settings,
               ),
+              ListTile(
+                leading: Icon(Icons.search),
+                title: Text("Explore"),
+                onTap: con.usersearch,
+                ),
             ],
           ),
         ),
@@ -146,6 +152,24 @@ class _Controller {
   _Controller(this._state);
   int delIndex;
   String searchKey;
+  List<FirebaseUser> users;
+
+
+  void usersearch() async {
+      try{
+        List<PhotoMemo> usersFromphotoMemos = 
+          await FirebaseController.getUsers();
+
+        //print("tested to here");
+        
+        await Navigator.pushNamed(_state.context, UserSearchScreen.routeName,
+        arguments: usersFromphotoMemos);
+
+        Navigator.pop(_state.context);
+      }catch(e){
+
+      }
+  }
 
   void settings() async {
     await Navigator.pushNamed(_state.context, SettingsScreen.routeName,

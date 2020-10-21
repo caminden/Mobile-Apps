@@ -179,4 +179,39 @@ class FirebaseController {
 
     await user.updateProfile(updateInfo);
   }
+
+  //function
+  static Future<List<PhotoMemo>> getUsers() async {
+    QuerySnapshot queryAll = await Firestore.instance
+        .collection(PhotoMemo.COLLECTION)
+        .where(PhotoMemo.CREATED_BY)
+        .orderBy(PhotoMemo.UPDATED_AT, descending: true)
+        .getDocuments();
+
+    var result = <PhotoMemo>[];
+    if (queryAll != null && queryAll.documents.length != 0) {
+      for (var doc in queryAll.documents) {
+        result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
+      }
+    }
+    return result;
+  }
+
+  //function
+  static Future<List<PhotoMemo>> getSpecificUsers(String email) async {
+    QuerySnapshot querySnapshot = await Firestore.instance
+        .collection(PhotoMemo.COLLECTION)
+        .where(PhotoMemo.CREATED_BY, isEqualTo: email)
+        .orderBy(PhotoMemo.UPDATED_AT, descending: true)
+        .getDocuments();
+
+    var result = <PhotoMemo>[];
+    if (querySnapshot != null && querySnapshot.documents.length != 0) {
+      for (var doc in querySnapshot.documents) {
+        result.add(PhotoMemo.deserialize(doc.data, doc.documentID));
+      }
+    }
+    return result;
+  }
+
 }

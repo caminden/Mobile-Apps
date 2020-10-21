@@ -7,6 +7,7 @@ import 'package:photomemo/screens/settings_screen.dart';
 import 'package:photomemo/screens/sharedwith_screen.dart';
 import 'package:photomemo/screens/signin_screen.dart';
 import 'package:photomemo/screens/signup_screen.dart';
+import 'package:photomemo/screens/usersearch_screen.dart';
 
 void main() {
   runApp(PhotoMemoApp());
@@ -26,6 +27,7 @@ class PhotoMemoApp extends StatelessWidget{
         SharedWithScreen.routeName: (context) => SharedWithScreen(),
         SignUpScreen.routeName: (context) => SignUpScreen(),
         SettingsScreen.routeName: (context) => SettingsScreen(),
+        UserSearchScreen.routeName: (context) => UserSearchScreen(),
 
       },
     );
