@@ -71,6 +71,7 @@ class _DetailedState extends State<DetailedScreen> {
             Text("Created by: ${photoMemo.createdBy}"),
             Text("Updated at: ${photoMemo.updatedAt}"),
             Text("Shared with: ${photoMemo.sharedWith}"),
+            photoMemo.public == true ? Text("Privacy: public") : Text("Privacy: private"),
           ],
         ),
       ),

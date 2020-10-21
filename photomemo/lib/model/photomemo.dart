@@ -12,6 +12,7 @@ class PhotoMemo {
   static const IMAGE_LABELS = 'imageLabels';
   static const MIN_CONFIDENCE = 0.7;
   static const PROFILE_FOLDER = 'profilePictures';
+  static const PUBLIC = 'public';
 
   String docId; //firestore document id
   String createdBy;
@@ -22,6 +23,7 @@ class PhotoMemo {
   DateTime updatedAt; //created or revised time
   List<dynamic> sharedWith; //list of emails
   List<dynamic> imageLabels; //list of words from ML algorithm
+  bool public;
 
   PhotoMemo({
     this.docId,
@@ -33,6 +35,7 @@ class PhotoMemo {
     this.updatedAt,
     this.sharedWith,
     this.imageLabels,
+    this.public,
   }){
     this.sharedWith ??= [];
     this.imageLabels ??= [];
@@ -49,7 +52,7 @@ class PhotoMemo {
       UPDATED_AT: updatedAt,
       SHARED_WITH: sharedWith,
       IMAGE_LABELS: imageLabels,
-      
+      PUBLIC: public,
     };
   }
 
@@ -66,6 +69,7 @@ class PhotoMemo {
         DateTime.fromMillisecondsSinceEpoch(data[PhotoMemo.UPDATED_AT].millisecondsSinceEpoch) : null,
       sharedWith: data[PhotoMemo.SHARED_WITH],
       imageLabels: data[PhotoMemo.IMAGE_LABELS],
+      public: data[PhotoMemo.PUBLIC],
     );
   }
 

@@ -22,6 +22,7 @@ class _EditState extends State<EditScreen> {
   PhotoMemo photoMemo;
   FirebaseUser user;
   var formKey = GlobalKey<FormState>();
+  bool isPublic;
 
   @override
   void initState() {
@@ -132,7 +133,15 @@ class _EditState extends State<EditScreen> {
                 maxLines: 3,
                 validator: con.validatorSharedWith,
                 onSaved: con.onSavedSharedWith,
-              )
+              ),
+              SizedBox(height: 10,),
+              Text("Switch publicity?"),
+              Switch(
+                value: photoMemo.public,
+                onChanged: (value) {
+                  render((){photoMemo.public = value;});
+                }
+              ),
             ],
           ),
         ),
@@ -168,6 +177,7 @@ class _Controller {
         );
         _state.photoMemo.photoPath = photo['path'];
         _state.photoMemo.photoURL = photo['url'];
+        _state.photoMemo.public = _state.isPublic;
 
         _state.render(() => uploadProgress = 'ML Image Labeler started');
         List<String> labels =

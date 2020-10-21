@@ -184,7 +184,7 @@ class FirebaseController {
   static Future<List<PhotoMemo>> getUsers() async {
     QuerySnapshot queryAll = await Firestore.instance
         .collection(PhotoMemo.COLLECTION)
-        .where(PhotoMemo.CREATED_BY)
+        .where(PhotoMemo.PUBLIC, isEqualTo: true)
         .orderBy(PhotoMemo.UPDATED_AT, descending: true)
         .getDocuments();
 
@@ -202,6 +202,7 @@ class FirebaseController {
     QuerySnapshot querySnapshot = await Firestore.instance
         .collection(PhotoMemo.COLLECTION)
         .where(PhotoMemo.CREATED_BY, isEqualTo: email)
+        .where(PhotoMemo.PUBLIC, isEqualTo: true)
         .orderBy(PhotoMemo.UPDATED_AT, descending: true)
         .getDocuments();
 

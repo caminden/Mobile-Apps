@@ -23,6 +23,7 @@ class _AddState extends State<AddScreen> {
   var formKey = GlobalKey<FormState>();
   FirebaseUser user;
   List<PhotoMemo> photoMemos;
+  bool isPublic = false;
 
   @override
   void initState() {
@@ -131,7 +132,15 @@ class _AddState extends State<AddScreen> {
                 maxLines: 3,
                 validator: con.validatorSharedWith,
                 onSaved: con.onSavedSharedWith,
-              )
+              ),
+              SizedBox(height: 10,),
+              Text("Set to public?"),
+              Switch(
+                value: isPublic,
+                onChanged: (value) {
+                  render((){isPublic = value;});
+                }
+              ),
             ],
           ),
         ),
@@ -148,6 +157,7 @@ class _Controller {
   List<String> sharedWith = [];
   String uploadProgressMessage;
 
+ 
   void save() async {
     if (!_state.formKey.currentState.validate()) {
       return;
@@ -159,14 +169,15 @@ class _Controller {
 
       //upload picture to firestore
       Map<String, String> photoInfo = await FirebaseController.uploadStorage(
-          image: _state.image, 
-          uid: _state.user.uid, 
-          sharedWith: sharedWith, 
-          listener: (double progressPercentage){
-            _state.render((){
-              uploadProgressMessage = "Uplaoding: ${progressPercentage.toStringAsFixed(1)}%";
-            });
-          },
+        image: _state.image,
+        uid: _state.user.uid,
+        sharedWith: sharedWith,
+        listener: (double progressPercentage) {
+          _state.render(() {
+            uploadProgressMessage =
+                "Uplaoding: ${progressPercentage.toStringAsFixed(1)}%";
+          });
+        },
       );
 
       //get image labels by MLkit
@@ -184,6 +195,7 @@ class _Controller {
         sharedWith: sharedWith,
         updatedAt: DateTime.now(),
         imageLabels: labels,
+        public: _state.isPublic
       );
 
       p.docId = await FirebaseController.addPhotoMemo(p);
