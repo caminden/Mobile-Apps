@@ -85,7 +85,7 @@ class _UserSearchState extends State<UserSearchScreen> {
                         ),
                         Text(
                           "${memos[index].memo}",
-                          style: TextStyle(fontSize: 20.0),
+                          style: TextStyle(fontSize: 18.0),
                         ),
                         Text(
                           "User: ${memos[index].createdBy}",
