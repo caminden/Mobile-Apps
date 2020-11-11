@@ -1,6 +1,6 @@
 # SpiceRack
 
-A new Flutter project.
+Final project of mobile apps, 4 week long project in flutter
 
 ## Getting Started
 
