@@ -13,6 +13,7 @@ class SpiceRack extends StatelessWidget{
       theme: ThemeData(
         primaryColor: Colors.brown[200],
         canvasColor: Colors.brown[200],
+        
       ),
       initialRoute: LoginScreen.routeName,
       routes: {

@@ -1,9 +1,9 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/loginScreen';
@@ -23,6 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    FireBaseController.initializeFlutterFire();
     con = _Controller(this);
   }
 
@@ -35,7 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage("https://thepaintpeople.com/wp-content/uploads/2015/09/prepare-bare-wood-staining.jpg"),
+            image: NetworkImage(
+                "https://thepaintpeople.com/wp-content/uploads/2015/09/prepare-bare-wood-staining.jpg"),
             fit: BoxFit.fill,
           ),
         ),
@@ -76,28 +78,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
-                      hintText: "Email",
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(gapPadding: 20.0)
-                    ),
+                        hintText: "Email",
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(gapPadding: 20.0)),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     validator: con.validateEmail,
                     onSaved: con.saveEmail,
                   ),
                 ),
-                SizedBox(height: 15.0,),
+                SizedBox(
+                  height: 15.0,
+                ),
                 Container(
                   width: 200.0,
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
-                      hintText: "password",
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(gapPadding: 20.0)
-                    ),
+                        hintText: "password",
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(gapPadding: 20.0)),
                     keyboardType: TextInputType.emailAddress,
                     autocorrect: false,
                     obscureText: true, //change this for variability in future
@@ -156,20 +158,24 @@ class _Controller {
     password = s;
   }
 
-  void login() {
+  //function for initial login
+  void login() async {  
     if (!_state.formKey.currentState.validate()) {
       return;
     }
     _state.formKey.currentState.save();
 
-    try{
-      FireBaseController.login(email, password);
-      //if success
-      Navigator.pushReplacementNamed(_state.context, HomeScreen.routename);
-    }catch(e){
-      AlertDialog(title: Text("ERROR"), 
-      content: e.message ?? e.toString(),
-      );
+    try {
+      UserCredential cred = await FireBaseController.login(email, password);
+      //print("CRED: $cred\n");
+      User u = cred.user;
+      if(cred != null){
+        Navigator.pushReplacementNamed(_state.context, HomeScreen.routename, arguments: u);
+      }
+    } catch (e) {
+      print("$e");
+      //statement for when login fails, fix to return as error message
     }
+    
   }
 }
