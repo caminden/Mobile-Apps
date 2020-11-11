@@ -9,6 +9,10 @@ class SpiceRack extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.brown[200],
+        canvasColor: Colors.brown[200],
+      ),
       initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
