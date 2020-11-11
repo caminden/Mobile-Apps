@@ -1,3 +1,4 @@
+import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,6 +17,7 @@ class SpiceRack extends StatelessWidget{
       initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
+        HomeScreen.routename: (context) => HomeScreen(),
       },
     ); 
   }

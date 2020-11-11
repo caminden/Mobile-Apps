@@ -1,3 +1,6 @@
+import 'package:SpiceRack/controller/firebasecontroller.dart';
+import 'package:SpiceRack/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -158,5 +161,15 @@ class _Controller {
       return;
     }
     _state.formKey.currentState.save();
+
+    try{
+      FireBaseController.login(email, password);
+      //if success
+      Navigator.pushReplacementNamed(_state.context, HomeScreen.routename);
+    }catch(e){
+      AlertDialog(title: Text("ERROR"), 
+      content: e.message ?? e.toString(),
+      );
+    }
   }
 }
