@@ -1,5 +1,6 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
+import 'package:SpiceRack/screens/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -18,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   _Controller con;
   var formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   @override
   void initState() {
@@ -26,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
     FireBaseController.initializeFlutterFire();
     con = _Controller(this);
   }
+
+  render(fn) => setState(fn);
 
   @override
   Widget build(BuildContext context) {
@@ -91,21 +95,38 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 15.0,
                 ),
-                Container(
-                  width: 200.0,
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                        hintText: "password",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(gapPadding: 20.0)),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
-                    obscureText: true, //change this for variability in future
-                    validator: con.validatePassword,
-                    onSaved: con.savePassword,
-                  ),
+                Row(
+                  children: [
+                    SizedBox(width: 105.0),
+                    Container(
+                      width: 200.0,
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            hintText: "Password",
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(gapPadding: 20.0)),
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        obscureText:
+                            visible, //change this for variability in future
+                        validator: con.validatePassword,
+                        onSaved: con.savePassword,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.visibility),
+                      onPressed: () {
+                        if (visible == true) {
+                          visible = false;
+                        } else {
+                          visible = true;
+                        };
+                        render((){});
+                      },
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 10.0,
@@ -114,6 +135,32 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Text("Sign In"),
                   color: Colors.grey,
                   onPressed: con.login,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      width: 200.0,
+                      height: 130.0,
+                      alignment: Alignment.bottomLeft,
+                      child: FlatButton(
+                        color: Colors.transparent,
+                        child: Text("Sign Up Here",
+                            style: TextStyle(fontSize: 20.0)),
+                        onPressed: con.signUp,
+                      ),
+                    ),
+                    Container(
+                      width: 210.0,
+                      height: 130.0,
+                      alignment: Alignment.bottomRight,
+                      child: FlatButton(
+                        color: Colors.transparent,
+                        child: Text("Forgot password?",
+                            style: TextStyle(fontSize: 20.0)),
+                        onPressed: () {},
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -159,7 +206,7 @@ class _Controller {
   }
 
   //function for initial login
-  void login() async {  
+  void login() async {
     if (!_state.formKey.currentState.validate()) {
       return;
     }
@@ -169,13 +216,19 @@ class _Controller {
       UserCredential cred = await FireBaseController.login(email, password);
       //print("CRED: $cred\n");
       User u = cred.user;
-      if(cred != null){
-        Navigator.pushReplacementNamed(_state.context, HomeScreen.routename, arguments: u);
+      if (cred != null) {
+        Navigator.pushReplacementNamed(_state.context, HomeScreen.routename,
+            arguments: u);
       }
     } catch (e) {
       print("$e");
       //statement for when login fails, fix to return as error message
     }
-    
   }
+
+  void signUp() {
+    Navigator.pushReplacementNamed(_state.context, SignUpScreen.routeName);
+  }
+
+  void forgotPassword() {}
 }
