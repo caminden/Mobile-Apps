@@ -1,4 +1,5 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
+import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpState extends State<SignUpScreen> {
   _Controller con;
   var formKey = GlobalKey<FormState>();
+  bool visible = true;
 
   @override
   void initState() {
@@ -24,13 +26,15 @@ class _SignUpState extends State<SignUpScreen> {
     con = _Controller(this);
   }
 
+  render(fn) => setState(fn);
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
         title: Padding(
-          padding: const EdgeInsets.fromLTRB(150, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(110, 0, 0, 0),
           child: Text(
             "Sign Up",
           ),
@@ -105,22 +109,39 @@ class _SignUpState extends State<SignUpScreen> {
                 SizedBox(
                   height: 15.0,
                 ),
-                Container(
-                  width: 200.0,
-                  child: TextFormField(
-                    textAlign: TextAlign.center,
-                    decoration: InputDecoration(
-                        hintText: "password",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(gapPadding: 20.0)),
-                    keyboardType: TextInputType.emailAddress,
-                    autocorrect: false,
-                    obscureText: true, //change this for variability in future
-                    validator: con.validatePassword,
-                    onSaved: con.savePassword,
-                  ),
-                )
+                Row(
+                  children: [
+                    SizedBox(width: 105.0),
+                    Container(
+                      width: 200.0,
+                      child: TextFormField(
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                            hintText: "Password",
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(gapPadding: 20.0)),
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        obscureText:
+                            visible, //change this for variability in future
+                        validator: con.validatePassword,
+                        onSaved: con.savePassword,
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.visibility),
+                      onPressed: () {
+                        if (visible == true) {
+                          visible = false;
+                        } else {
+                          visible = true;
+                        };
+                        render((){});
+                      },
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -171,9 +192,9 @@ class _Controller {
     
     try{
       UserCredential newuser = await FireBaseController.signUp(email, password);
-      print("********");
+      //print("********");
     }catch(e){
-      print("$e");
+      Alert.send(_state.context, "Sign Up Error", e.message);
       return;
     }
     Navigator.pushReplacementNamed(_state.context, LoginScreen.routeName);

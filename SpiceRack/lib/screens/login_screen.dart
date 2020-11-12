@@ -1,4 +1,5 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
+import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:SpiceRack/screens/signup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -221,13 +222,13 @@ class _Controller {
             arguments: u);
       }
     } catch (e) {
-      print("$e");
+      Alert.send(_state.context, "Login Error", e.message);
       //statement for when login fails, fix to return as error message
     }
   }
 
   void signUp() {
-    Navigator.pushReplacementNamed(_state.context, SignUpScreen.routeName);
+    Navigator.pushNamed(_state.context, SignUpScreen.routeName);
   }
 
   void forgotPassword() {}
