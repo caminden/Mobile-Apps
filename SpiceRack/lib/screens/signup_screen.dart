@@ -174,6 +174,7 @@ class _Controller {
       print("********");
     }catch(e){
       print("$e");
+      return;
     }
     Navigator.pushReplacementNamed(_state.context, LoginScreen.routeName);
   }
