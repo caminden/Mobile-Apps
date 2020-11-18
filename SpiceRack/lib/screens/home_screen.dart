@@ -35,9 +35,7 @@ class _HomeState extends State<HomeScreen> {
 
     return Scaffold(
       drawer: Drawer(
-        
         child: Column(
-          
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountEmail: Text(user.email),
@@ -108,7 +106,6 @@ class _Controller {
   }
 
   void openRecipeBook(String email) async {
-    print("$email");
     try{
       List<Recipe> recipes = await FireBaseController.loadRecipes(email);
       Navigator.pushNamed(_state.context, RecipeBook.routeName, arguments: recipes);

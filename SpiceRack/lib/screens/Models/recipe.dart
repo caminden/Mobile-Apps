@@ -1,12 +1,13 @@
 class Recipe {
   static const COLLECTION = 'Recipes';
+  static const IMAGE_FOLDER = 'RecipePics';
   static const NAME = 'name';
   static const PREPTIME = 'prepTime';
   static const INGREDIENTS = 'ingredients';
   static const INSTRUCTIONS = 'instructions';
   static const PHOTOPATH = 'photoPath';
   static const PHOTOURL = 'photoUrl';
-  static const OWNER = 'owner';
+  static const OWNER = 'Owner';
 
   String owner;
   String name;
