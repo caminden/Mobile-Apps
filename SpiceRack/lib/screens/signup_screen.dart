@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
@@ -26,6 +28,8 @@ class _SignUpState extends State<SignUpScreen> {
     con = _Controller(this);
   }
 
+  
+
   render(fn) => setState(fn);
 
   @override
@@ -33,11 +37,9 @@ class _SignUpState extends State<SignUpScreen> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(110, 0, 0, 0),
-          child: Text(
-            "Sign Up",
-          ),
+        centerTitle: true,
+        title: Text(
+          "Sign Up",
         ),
         actions: <Widget>[
           IconButton(
@@ -51,8 +53,7 @@ class _SignUpState extends State<SignUpScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-                "https://thepaintpeople.com/wp-content/uploads/2015/09/prepare-bare-wood-staining.jpg"),
+            image: AssetImage("assets/wood.jpg"),
             fit: BoxFit.fill,
           ),
         ),
@@ -111,9 +112,9 @@ class _SignUpState extends State<SignUpScreen> {
                 ),
                 Row(
                   children: [
-                    SizedBox(width: 105.0),
+                    SizedBox(width: MediaQuery.of(context).size.width / 4),
                     Container(
-                      width: 200.0,
+                      width: MediaQuery.of(context).size.width / 2,
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -136,8 +137,9 @@ class _SignUpState extends State<SignUpScreen> {
                           visible = false;
                         } else {
                           visible = true;
-                        };
-                        render((){});
+                        }
+                        ;
+                        render(() {});
                       },
                     ),
                   ],
@@ -155,7 +157,6 @@ class _Controller {
   _SignUpState _state;
   _Controller(this._state);
   String email, password;
-
 
   String validateEmail(String s) {
     if (s == null || !s.contains("@") || !s.contains(".")) {
@@ -189,11 +190,11 @@ class _Controller {
       return;
     }
     _state.formKey.currentState.save();
-    
-    try{
+
+    try {
       UserCredential newuser = await FireBaseController.signUp(email, password);
       //print("********");
-    }catch(e){
+    } catch (e) {
       Alert.send(_state.context, "Sign Up Error", e.message);
       return;
     }

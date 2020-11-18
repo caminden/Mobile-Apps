@@ -41,8 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-                "https://thepaintpeople.com/wp-content/uploads/2015/09/prepare-bare-wood-staining.jpg"),
+            image: AssetImage("assets/wood.jpg"),
             fit: BoxFit.fill,
           ),
         ),
@@ -79,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 200.0,
                 ),
                 Container(
-                  width: 200.0,
+                  width:  MediaQuery.of(context).size.width/2,
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
@@ -98,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Row(
                   children: [
-                    SizedBox(width: 105.0),
+                    SizedBox(width: MediaQuery.of(context).size.width/4),
                     Container(
-                      width: 200.0,
+                      width: MediaQuery.of(context).size.width/2,
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -137,27 +136,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.grey,
                   onPressed: con.login,
                 ),
+                SizedBox(height: 50.0,),
                 Row(
                   children: [
                     Container(
-                      width: 200.0,
-                      height: 130.0,
+                      width: MediaQuery.of(context).size.width/2,
+                      height: 100.0,
                       alignment: Alignment.bottomLeft,
                       child: FlatButton(
                         color: Colors.transparent,
                         child: Text("Sign Up Here",
-                            style: TextStyle(fontSize: 20.0)),
+                            style: TextStyle(fontSize: 15.0)),
                         onPressed: con.signUp,
                       ),
                     ),
                     Container(
-                      width: 210.0,
-                      height: 130.0,
+                      width: MediaQuery.of(context).size.width/2,
+                      height: 100.0,
                       alignment: Alignment.bottomRight,
                       child: FlatButton(
                         color: Colors.transparent,
-                        child: Text("Forgot password?",
-                            style: TextStyle(fontSize: 20.0)),
+                        child: Text("Forgot password",
+                            style: TextStyle(fontSize: 15.0)),
                         onPressed: () {},
                       ),
                     ),

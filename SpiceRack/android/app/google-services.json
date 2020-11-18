@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "19729149861",
-    "firebase_url": "https://cminden-map2020-photomemo.firebaseio.com",
-    "project_id": "cminden-map2020-photomemo",
-    "storage_bucket": "cminden-map2020-photomemo.appspot.com"
+    "project_number": "904120364229",
+    "firebase_url": "https://spicerack-d5086.firebaseio.com",
+    "project_id": "spicerack-d5086",
+    "storage_bucket": "spicerack-d5086.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:19729149861:android:eadfd031746c219063424c",
+        "mobilesdk_app_id": "1:904120364229:android:f636a93be07e794e43d4ac",
         "android_client_info": {
-          "package_name": "edu.uco.cminden.map2020.photomemo"
+          "package_name": "edu.uco.cminden.spicerack.SpiceRack"
         }
       },
       "oauth_client": [
         {
-          "client_id": "19729149861-5jnuidnmrbofrm5ackq8q15d62m1q17o.apps.googleusercontent.com",
+          "client_id": "904120364229-49fiii167f0imkt0kra2q1faglrt5i9i.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyABn-AfIlDXYy2KeLwfvvMtJB1nH7jr2_E"
+          "current_key": "AIzaSyB1onP5nuM_84gDWR5lxpEtT8FQvCBdT9Y"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "19729149861-5jnuidnmrbofrm5ackq8q15d62m1q17o.apps.googleusercontent.com",
+              "client_id": "904120364229-49fiii167f0imkt0kra2q1faglrt5i9i.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

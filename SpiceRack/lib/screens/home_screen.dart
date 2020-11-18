@@ -1,5 +1,8 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
+import 'package:SpiceRack/screens/Alerts/Alert.dart';
+import 'package:SpiceRack/screens/Models/recipe.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
+import 'package:SpiceRack/screens/recipebook_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -32,14 +35,21 @@ class _HomeState extends State<HomeScreen> {
 
     return Scaffold(
       drawer: Drawer(
+        
         child: Column(
+          
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountEmail: Text(user.email),
               accountName:
                   name == null ? Text(user.email.split("@")[0]) : Text(name),
               margin: EdgeInsets.all(10.0),
-              decoration: BoxDecoration(color: Colors.white),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/wood.jpg"),
+                  fit: BoxFit.fill
+                ),
+              ),
             ),
             Container(
               child: FlatButton(
@@ -51,32 +61,60 @@ class _HomeState extends State<HomeScreen> {
         ),
       ),
       appBar: AppBar(
-        title: Text("Home page"),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(170, 228, 193, 133),
+        title: Text("Spice Rack", style: TextStyle(fontSize: 30.0)),
+        
       ),
       body: Container(
-         width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: NetworkImage(
-                "https://thepaintpeople.com/wp-content/uploads/2015/09/prepare-bare-wood-staining.jpg"),
+            image: AssetImage("assets/wood.jpg"),
             fit: BoxFit.fill,
           ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 10.0,),
+            Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width/3,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: FlatButton(
+                color: Colors.brown[100],
+                child: Text("Visit Recipe Book"),
+                onPressed: () => con.openRecipeBook(user.email),
+              ),
+            )
+          ],
         ),
       ),
     );
   }
 }
 
-class _Controller{
+class _Controller {
   _HomeState _state;
   _Controller(this._state);
 
   void logout() async {
-    try{
+    try {
       await FireBaseController.logout();
-    }catch(e){
-    }
+    } catch (e) {}
     Navigator.pushReplacementNamed(_state.context, LoginScreen.routeName);
+  }
+
+  void openRecipeBook(String email) async {
+    print("$email");
+    try{
+      List<Recipe> recipes = await FireBaseController.loadRecipes(email);
+      Navigator.pushNamed(_state.context, RecipeBook.routeName, arguments: recipes);
+    }catch(e){
+      Alert.send(_state.context, "Firestore error", "$e");
+    }
+
   }
 }

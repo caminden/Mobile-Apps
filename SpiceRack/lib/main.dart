@@ -1,5 +1,6 @@
 import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
+import 'package:SpiceRack/screens/recipebook_screen.dart';
 import 'package:SpiceRack/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +22,7 @@ class SpiceRack extends StatelessWidget{
         LoginScreen.routeName: (context) => LoginScreen(),
         HomeScreen.routename: (context) => HomeScreen(),
         SignUpScreen.routeName: (context) => SignUpScreen(),
+        RecipeBook.routeName: (context) => RecipeBook(),
       },
     ); 
   }
