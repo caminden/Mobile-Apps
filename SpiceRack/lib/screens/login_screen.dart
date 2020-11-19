@@ -20,7 +20,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   _Controller con;
   var formKey = GlobalKey<FormState>();
+  var _formKey = GlobalKey<FormState>();
   bool visible = true;
+  bool help;
 
   @override
   void initState() {
@@ -78,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 200.0,
                 ),
                 Container(
-                  width:  MediaQuery.of(context).size.width/2,
+                  width: MediaQuery.of(context).size.width / 2,
                   child: TextFormField(
                     textAlign: TextAlign.center,
                     decoration: InputDecoration(
@@ -97,9 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Row(
                   children: [
-                    SizedBox(width: MediaQuery.of(context).size.width/4),
+                    SizedBox(width: MediaQuery.of(context).size.width / 4),
                     Container(
-                      width: MediaQuery.of(context).size.width/2,
+                      width: MediaQuery.of(context).size.width / 2,
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         decoration: InputDecoration(
@@ -122,8 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           visible = false;
                         } else {
                           visible = true;
-                        };
-                        render((){});
+                        }
+                        ;
+                        render(() {});
                       },
                     ),
                   ],
@@ -136,11 +139,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.grey,
                   onPressed: con.login,
                 ),
-                SizedBox(height: 50.0,),
+                SizedBox(
+                  height: 50.0,
+                ),
                 Row(
                   children: [
                     Container(
-                      width: MediaQuery.of(context).size.width/2,
+                      width: MediaQuery.of(context).size.width / 2,
                       height: 100.0,
                       alignment: Alignment.bottomLeft,
                       child: FlatButton(
@@ -151,14 +156,62 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width/2,
+                      width: MediaQuery.of(context).size.width / 2,
                       height: 100.0,
                       alignment: Alignment.bottomRight,
                       child: FlatButton(
                         color: Colors.transparent,
                         child: Text("Forgot password",
                             style: TextStyle(fontSize: 15.0)),
-                        onPressed: () {},
+                        onPressed: () {
+                          //open up a popup form
+                          showDialog(
+                            barrierDismissible: true,
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Form(
+                                  key: _formKey,
+                                  child: Container(
+                                    height:
+                                        MediaQuery.of(context).size.height / 5,
+                                    child: Column(
+                                      children: <Widget>[
+                                        Text("Enter email to reset"),
+                                        Container(
+                                          alignment: Alignment.bottomCenter,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              2,
+                                          child: TextFormField(
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                                hintText: "Email",
+                                                filled: true,
+                                                fillColor: Colors.white,
+                                                border: OutlineInputBorder(
+                                                    gapPadding: 20.0)),
+                                            keyboardType:
+                                                TextInputType.emailAddress,
+                                            autocorrect: false,
+                                            onSaved: con.saveBackupEmail,
+                                            validator: con.validateBackupEmail,
+                                          ),
+                                        ),
+                                        RaisedButton(
+                                          child: Text("Submit"),
+                                          onPressed:
+                                              con.sendReset, //change later
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -175,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
 class _Controller {
   _LoginScreenState _state;
   _Controller(this._state);
-  String email;
+  String email, backupEmail;
   String password;
 
   //validate function
@@ -231,5 +284,30 @@ class _Controller {
     Navigator.pushNamed(_state.context, SignUpScreen.routeName);
   }
 
-  void forgotPassword() {}
+  String validateBackupEmail(String s) {
+    if (s == null || !s.contains("@") || !s.contains(".")) {
+      return "Invalid email address";
+    } else {
+      return null;
+    }
+  }
+
+  //save function
+  void saveBackupEmail(String s) {
+    backupEmail = s;
+  }
+
+  void sendReset() async {
+    if (!_state._formKey.currentState.validate()) {
+      return;
+    }
+    _state._formKey.currentState.save();
+
+    try {
+      FireBaseController.sendReset(backupEmail);
+    } catch (e) {
+      Alert.send(_state.context, "Email reset Error", e.message);
+    }
+    Navigator.of(_state.context).pop();
+  }
 }

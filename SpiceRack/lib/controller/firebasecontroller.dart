@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -63,5 +64,22 @@ class FireBaseController {
         .collection(Recipe.COLLECTION)
         .add(rec.serialize());
     return ref.id;
+  }
+
+  static Future updatePW(
+      String email, String password, String newPassword) async {
+    UserCredential user = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+    user.user.updatePassword(newPassword);
+  }
+
+  static Future updateEmail(
+      User user, String newEmail) async {
+    print("Inside update");
+    user.updateEmail(newEmail);
+  }
+
+  static Future sendReset(String email) async {
+    FirebaseAuth.instance.sendPasswordResetEmail(email: email);
   }
 }
