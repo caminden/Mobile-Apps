@@ -11,7 +11,7 @@ class Recipe {
 
   String owner;
   String name;
-  int prepTime;
+  String prepTime;
   String ingredients;
   String instructions;
   String photoPath;
