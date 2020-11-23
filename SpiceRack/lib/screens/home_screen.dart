@@ -113,7 +113,7 @@ class _Controller {
   void openRecipeBook(String email) async {
     try{
       List<Recipe> recipes = await FireBaseController.loadRecipes(email);
-      Navigator.pushNamed(_state.context, RecipeBook.routeName, arguments: recipes);
+      Navigator.pushNamed(_state.context, RecipeBook.routeName, arguments: {"recipes": recipes, "user": _state.user});
     }catch(e){
       Alert.send(_state.context, "Firestore error", "$e");
     }

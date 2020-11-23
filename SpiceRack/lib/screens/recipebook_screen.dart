@@ -1,5 +1,6 @@
 import 'package:SpiceRack/screens/Models/recipe.dart';
 import 'package:SpiceRack/screens/addrecipe_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -15,6 +16,8 @@ class RecipeBook extends StatefulWidget {
 class _RecipeBookState extends State<RecipeBook> {
   _Controller con;
   List<Recipe> recipes;
+  User user;
+  int halfLength;
 
   @override
   void initState() {
@@ -25,8 +28,11 @@ class _RecipeBookState extends State<RecipeBook> {
 
   @override
   Widget build(BuildContext context) {
-    recipes ??= ModalRoute.of(context).settings.arguments;
-    print(recipes.length);
+    Map map = ModalRoute.of(context).settings.arguments;
+    recipes ??= map["recipes"];
+    user ??= map['user'];
+
+    halfLength = recipes.length ~/ 2;
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: Text("Recipe Book")),
@@ -44,16 +50,103 @@ class _RecipeBookState extends State<RecipeBook> {
           child: recipes == null
               ? Text("No recipes")
               : ListView.builder(
-                  itemCount: recipes.length,
-                  itemBuilder: (BuildContext context, int index) => SizedBox(
-                    width: 100.0,
-                    height: 100.0,
-                    child: Card(
-                      color: Colors.white,
-                      child: Text("Recipe: ${recipes[index].name}"),
-                    ),
-                  ),
-                ),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: recipes.length - halfLength,
+                  itemBuilder: (BuildContext context, int index) {
+                    index = index * 2;
+                    return SizedBox(
+                      width: 400.0,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 400,
+                            height: 300,
+                            child: Card(
+                              color: Colors.white,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                          padding: EdgeInsets.all(10),
+                                          width: 150,
+                                          height: 150,
+                                          child: Image.network(
+                                            "${recipes[index].photoUrl}",
+                                          )),
+                                      SizedBox(
+                                        width: 50,
+                                      ),
+                                      Text("${recipes[index].name}",
+                                          style: TextStyle(fontSize: 25)),
+                                    ],
+                                  ),
+                                  Text("  Ingredients:",
+                                      style: TextStyle(fontSize: 20)),
+                                  Text("  ${recipes[index].ingredients}",
+                                      style: TextStyle(fontSize: 20)),
+                                  Container(
+                                    width: 400,
+                                    height: 80,
+                                    alignment: Alignment.bottomCenter,
+                                    child: Text("Click for more"),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          index + 1 < recipes.length
+                              ? Container(
+                                  width: 400,
+                                  height: 300,
+                                  child: Card(
+                                    color: Colors.white,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                padding: EdgeInsets.all(10),
+                                                width: 150,
+                                                height: 150,
+                                                child: Image.network(
+                                                  "${recipes[index+1].photoUrl}",
+                                                )),
+                                            SizedBox(
+                                              width: 50,
+                                            ),
+                                            Text(
+                                                "${recipes[index+1].name}",
+                                                style: TextStyle(fontSize: 25)),
+                                          ],
+                                        ),
+                                        Text("  Ingredients:",
+                                            style: TextStyle(fontSize: 20)),
+                                        Text("  ${recipes[index+1].ingredients}",
+                                            style: TextStyle(fontSize: 20)),
+                                        Container(
+                                          width: 400,
+                                          height: 80,
+                                          alignment: Alignment.bottomCenter,
+                                          child: Text("Click for more"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(
+                                  width: 400,
+                                ),
+                        ],
+                      ),
+                    );
+                  }),
         ),
       ),
       floatingActionButton: RaisedButton(
@@ -75,6 +168,9 @@ class _Controller {
   _Controller(this._state);
 
   void addRecipe() {
-    Navigator.pushNamed(_state.context, AddRecipe.routeName);
+    Navigator.pushNamed(_state.context, AddRecipe.routeName, arguments: {
+      'user': _state.user,
+      'recipes': _state.recipes,
+    });
   }
 }

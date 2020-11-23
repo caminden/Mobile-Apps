@@ -38,7 +38,6 @@ class FireBaseController {
     var result = <Recipe>[];
     if (snapshot != null && snapshot.docs.length != 0) {
       for (var doc in snapshot.docs) {
-        print("Adding");
         result.add(Recipe.deserialize(doc.data(), doc.id));
       }
     }
@@ -50,12 +49,9 @@ class FireBaseController {
     @required String uid,
   }) async {
     String filePath = "${Recipe.IMAGE_FOLDER}/$uid/${DateTime.now()}";
-    UploadTask upload =
-        FirebaseStorage.instance.ref().child(filePath).putFile(image);
-    upload.whenComplete(() {
-      var download = upload.snapshot;
-      return {"url": download.ref.getDownloadURL(), "path": filePath};
-    });
+    await FirebaseStorage.instance.ref().child(filePath).putFile(image);
+    var url = await FirebaseStorage.instance.ref(filePath).getDownloadURL();
+    return {"url": url, "path": filePath};
   }
 
   //add recipes
