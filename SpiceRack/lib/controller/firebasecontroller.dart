@@ -69,13 +69,43 @@ class FireBaseController {
     user.user.updatePassword(newPassword);
   }
 
-  static Future updateEmail(
-      User user, String newEmail) async {
+  static Future updateEmail(User user, String newEmail) async {
     print("Inside update");
     user.updateEmail(newEmail);
   }
 
   static Future sendReset(String email) async {
     FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+  }
+
+  static Future delete(Recipe recipe) async {
+    await FirebaseFirestore.instance
+        .collection(Recipe.COLLECTION)
+        .doc(recipe.docID)
+        .delete();
+    await FirebaseStorage.instance.ref().child(recipe.photoPath).delete();
+  }
+
+  static Future<List<Recipe>> searchRecipes(
+      {@required String email, @required String name}) async {
+      String c = name.substring(0, 1);
+      c = c.toUpperCase();
+      String b = name.substring(1);
+      b = b.toLowerCase();
+      name = c+b;
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection(Recipe.COLLECTION)
+        .where(Recipe.OWNER, isEqualTo: email)
+        .where(Recipe.NAME, isEqualTo: name)
+        .get();
+
+    var result = <Recipe>[];
+    if (snapshot != null && snapshot.docs.length != 0) {
+      for (var doc in snapshot.docs) {
+        result.add(Recipe.deserialize(doc.data(), doc.id));
+      }
+    }
+    return result;
   }
 }

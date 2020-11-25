@@ -1,6 +1,8 @@
 import 'package:SpiceRack/screens/addrecipe_screen.dart';
+import 'package:SpiceRack/screens/detail_screen.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
+import 'package:SpiceRack/screens/pantry_screen.dart';
 import 'package:SpiceRack/screens/recipebook_screen.dart';
 import 'package:SpiceRack/screens/settings_screen.dart';
 import 'package:SpiceRack/screens/signup_screen.dart';
@@ -27,6 +29,8 @@ class SpiceRack extends StatelessWidget{
         RecipeBook.routeName: (context) => RecipeBook(),
         AddRecipe.routeName: (context) => AddRecipe(),
         SettingsScreen.routeName: (context) => SettingsScreen(),
+        DetailedRecipe.routeName: (context) => DetailedRecipe(),
+        Pantry.routeName: (conetxt) => Pantry(),
       },
     ); 
   }

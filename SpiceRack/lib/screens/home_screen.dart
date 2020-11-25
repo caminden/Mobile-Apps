@@ -2,6 +2,7 @@ import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
+import 'package:SpiceRack/screens/pantry_screen.dart';
 import 'package:SpiceRack/screens/recipebook_screen.dart';
 import 'package:SpiceRack/screens/settings_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -91,6 +92,17 @@ class _HomeState extends State<HomeScreen> {
                 child: Text("Visit Recipe Book"),
                 onPressed: () => con.openRecipeBook(user.email),
               ),
+            ),
+            SizedBox(height: 10.0,),
+            Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width/3,
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: FlatButton(
+                color: Colors.brown[100],
+                child: Text("Visit Pantry"),
+                onPressed: () => con.openPantry(user.email),
+              ),
             )
           ],
         ),
@@ -122,5 +134,9 @@ class _Controller {
   void settings(User user) async {
     await Navigator.pushNamed(_state.context, SettingsScreen.routeName, arguments: user);
     
+  }
+
+  void openPantry(String email) async {
+    await Navigator.pushNamed(_state.context, Pantry.routeName, arguments: _state.user);
   }
 }

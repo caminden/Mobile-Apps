@@ -231,8 +231,8 @@ class _Controller {
 
       r.docID = await FireBaseController.addRecipe(r);
       _state.recipes.insert(0, r);
-
       Navigator.pop(_state.context);
+      Alert.send(_state.context, "Add Recipe Complete", "recipe successfully added");
     } catch (e) {
       Alert.send(_state.context, "Add Recipe error", e.message);
     }
@@ -270,7 +270,11 @@ class _Controller {
 
   //start saves
   void saveName(String s) {
-    name = s;
+    String c = s.substring(0, 1);
+    c = c.toUpperCase();
+    String b = s.substring(1);
+    b = b.toLowerCase();
+    name = c+b; 
   }
 
   void savePrep(String s) {
