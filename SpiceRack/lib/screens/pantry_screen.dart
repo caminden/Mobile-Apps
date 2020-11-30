@@ -1,3 +1,4 @@
+import 'package:SpiceRack/screens/addpantry_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +23,10 @@ class _PantryState extends State<Pantry> {
 
   @override
   Widget build(BuildContext context) {
-    
     user = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text("Pantry"),
       ),
       body: Container(
@@ -39,6 +40,16 @@ class _PantryState extends State<Pantry> {
         ),
         child: Text("${user.email}", style: TextStyle(fontSize: 20)),
       ),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.brown[100],
+        ),
+        child: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () => Navigator.pushNamed(context, AddPantry.routeName),
+        ),
+      ),
     );
   }
 }
@@ -46,4 +57,6 @@ class _PantryState extends State<Pantry> {
 class _Controller {
   _PantryState _state;
   _Controller(this._state);
+
+
 }

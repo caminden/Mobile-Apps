@@ -47,7 +47,7 @@ class _HomeState extends State<HomeScreen> {
               margin: EdgeInsets.all(10.0),
               decoration: BoxDecoration(
                 color: Colors.blue,
-                ),
+              ),
             ),
             Container(
               child: FlatButton(
@@ -82,10 +82,12 @@ class _HomeState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             Container(
               color: Colors.white,
-              width: MediaQuery.of(context).size.width/3,
+              width: MediaQuery.of(context).size.width / 3,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: FlatButton(
                 color: Colors.brown[100],
@@ -93,10 +95,12 @@ class _HomeState extends State<HomeScreen> {
                 onPressed: () => con.openRecipeBook(user.email),
               ),
             ),
-            SizedBox(height: 10.0,),
+            SizedBox(
+              height: 10.0,
+            ),
             Container(
               color: Colors.white,
-              width: MediaQuery.of(context).size.width/3,
+              width: MediaQuery.of(context).size.width / 3,
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: FlatButton(
                 color: Colors.brown[100],
@@ -123,20 +127,22 @@ class _Controller {
   }
 
   void openRecipeBook(String email) async {
-    try{
+    try {
       List<Recipe> recipes = await FireBaseController.loadRecipes(email);
-      Navigator.pushNamed(_state.context, RecipeBook.routeName, arguments: {"recipes": recipes, "user": _state.user});
-    }catch(e){
+      Navigator.pushNamed(_state.context, RecipeBook.routeName,
+          arguments: {"recipes": recipes, "user": _state.user});
+    } catch (e) {
       Alert.send(_state.context, "Firestore error", "$e");
     }
   }
 
   void settings(User user) async {
-    await Navigator.pushNamed(_state.context, SettingsScreen.routeName, arguments: user);
-    
+    await Navigator.pushNamed(_state.context, SettingsScreen.routeName,
+        arguments: user);
   }
 
   void openPantry(String email) async {
-    await Navigator.pushNamed(_state.context, Pantry.routeName, arguments: _state.user);
+    await Navigator.pushNamed(_state.context, Pantry.routeName,
+        arguments: _state.user);
   }
 }

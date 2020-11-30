@@ -1,3 +1,4 @@
+import 'package:SpiceRack/screens/addpantry_screen.dart';
 import 'package:SpiceRack/screens/addrecipe_screen.dart';
 import 'package:SpiceRack/screens/detail_screen.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
@@ -31,6 +32,7 @@ class SpiceRack extends StatelessWidget{
         SettingsScreen.routeName: (context) => SettingsScreen(),
         DetailedRecipe.routeName: (context) => DetailedRecipe(),
         Pantry.routeName: (conetxt) => Pantry(),
+        AddPantry.routeName: (context) => AddPantry(),
       },
     ); 
   }
