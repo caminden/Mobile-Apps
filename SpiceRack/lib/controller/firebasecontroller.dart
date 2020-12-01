@@ -110,7 +110,6 @@ class FireBaseController {
     return result;
   }
 
-
   static Future<Pantry> loadPantryItems(String email) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection(Pantry.COLLECTION)
@@ -125,7 +124,6 @@ class FireBaseController {
       return result;
     }
   }
-
 
   static Future<String> addPantryItems(Pantry newPantry) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
@@ -145,15 +143,15 @@ class FireBaseController {
       for (int i = 0; i < newPantry.items.length; i++) {
         skip = false;
         //check old pantry for similar name, if so then add #'s and skip
-        for(int j = 0; j < pantry.items.length; j++){
-            if(newPantry.items[i] == pantry.items[j]){
-              pantry.quantity[j] += newPantry.quantity[i];
-              skip = true;
-            }
+        for (int j = 0; j < pantry.items.length; j++) {
+          if (newPantry.items[i] == pantry.items[j]) {
+            pantry.quantity[j] += newPantry.quantity[i];
+            skip = true;
+          }
         }
-        if(skip != true){
-        pantry.items.add(newPantry.items[i]);
-        pantry.quantity.add(newPantry.quantity[i]);
+        if (skip != true) {
+          pantry.items.add(newPantry.items[i]);
+          pantry.quantity.add(newPantry.quantity[i]);
         }
       }
       //update doc with new pantry
@@ -163,7 +161,8 @@ class FireBaseController {
           .update(pantry.serialize());
       return pantry.docID;
     } //if snapshot doesnt exist
-    else {  //create new snapshot and return ID
+    else {
+      //create new snapshot and return ID
       DocumentReference ref = await FirebaseFirestore.instance
           .collection(Pantry.COLLECTION)
           .add(newPantry.serialize());

@@ -1,3 +1,4 @@
+import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Models/pantry.dart';
 import 'package:SpiceRack/screens/addpantry_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,8 @@ class _PantryState extends State<PantryScreen> {
   User user;
   Pantry pantry;
 
+  var formKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     super.initState();
@@ -32,8 +35,34 @@ class _PantryState extends State<PantryScreen> {
     pantry ??= map['pantry'];
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text("Pantry"),
+        actions: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10),
+            width: 150.0,
+            child: Form(
+              key: formKey,
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: "Search Items",
+                  fillColor: Colors.white,
+                  filled: true,
+                ),
+                autocorrect: false,
+                onSaved: con.onSaveSearchKey,
+              ),
+            ),
+          ),
+          con.delIndex == null
+              ? IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: con.search,
+                )
+              : IconButton(
+                  icon: Icon(Icons.delete),
+                  //onPressed: con.delete,
+                ),
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -115,6 +144,8 @@ class _PantryState extends State<PantryScreen> {
 class _Controller {
   _PantryState _state;
   _Controller(this._state);
+  int delIndex;
+  String searchKey;
 
   void addToPantry() async {
     await Navigator.pushNamed(_state.context, AddPantry.routeName, arguments: {
@@ -122,5 +153,31 @@ class _Controller {
       'pantry': _state.pantry,
     });
     _state.render(() {});
+  }
+
+  void onSaveSearchKey(String s) {
+   searchKey = s;
+  }
+
+  void search() async {
+    _state.formKey.currentState.save();
+    Pantry result = new Pantry();
+    if (searchKey == null || searchKey.trim().isEmpty) {
+      result = await FireBaseController.loadPantryItems(_state.user.email);
+    } else {
+      String c = searchKey.substring(0, 1);
+      c = c.toUpperCase();
+      String b = searchKey.substring(1);
+      b = b.toLowerCase();
+      searchKey = c + b;
+      Pantry original = await FireBaseController.loadPantryItems(_state.user.email);
+      for (int i = 0; i < original.items.length; i++) {
+        if (original.items[i].contains(searchKey)) {
+          result.items.add(original.items[i]);
+          result.quantity.add(original.quantity[i]);
+        }
+      }
+    }
+    _state.render(() => _state.pantry = result);
   }
 }
