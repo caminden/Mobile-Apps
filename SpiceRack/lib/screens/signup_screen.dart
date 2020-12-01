@@ -28,8 +28,6 @@ class _SignUpState extends State<SignUpScreen> {
     con = _Controller(this);
   }
 
-  
-
   render(fn) => setState(fn);
 
   @override

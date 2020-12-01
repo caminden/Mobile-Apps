@@ -1,6 +1,7 @@
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
+import 'package:SpiceRack/screens/Models/pantry.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
 import 'package:SpiceRack/screens/pantry_screen.dart';
 import 'package:SpiceRack/screens/recipebook_screen.dart';
@@ -142,7 +143,12 @@ class _Controller {
   }
 
   void openPantry(String email) async {
-    await Navigator.pushNamed(_state.context, Pantry.routeName,
-        arguments: _state.user);
+    try {
+      Pantry pantry = await FireBaseController.loadPantryItems(email);
+      Navigator.pushNamed(_state.context, PantryScreen.routeName,
+          arguments: {"pantry": pantry, "user": _state.user});
+    } catch (e) {
+      Alert.send(_state.context, "Firestore error", "$e");
+    }
   }
 }

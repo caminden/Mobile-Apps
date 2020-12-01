@@ -9,18 +9,17 @@ import 'package:SpiceRack/screens/settings_screen.dart';
 import 'package:SpiceRack/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 
-void main(){
+void main() {
   runApp(SpiceRack());
 }
 
-class SpiceRack extends StatelessWidget{
+class SpiceRack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.brown[50],
         canvasColor: Colors.brown[50],
-        
       ),
       initialRoute: LoginScreen.routeName,
       routes: {
@@ -31,9 +30,9 @@ class SpiceRack extends StatelessWidget{
         AddRecipe.routeName: (context) => AddRecipe(),
         SettingsScreen.routeName: (context) => SettingsScreen(),
         DetailedRecipe.routeName: (context) => DetailedRecipe(),
-        Pantry.routeName: (conetxt) => Pantry(),
+        PantryScreen.routeName: (conetxt) => PantryScreen(),
         AddPantry.routeName: (context) => AddPantry(),
       },
-    ); 
+    );
   }
 }

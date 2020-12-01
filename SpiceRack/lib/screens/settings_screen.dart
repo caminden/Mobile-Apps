@@ -251,8 +251,8 @@ class _Controller {
       //update password
       try {
         await FireBaseController.updateEmail(_state.user, newEmail);
-        UserCredential cred = await FireBaseController.updatePW(
-            newEmail, password, newPassword);
+        UserCredential cred =
+            await FireBaseController.updatePW(newEmail, password, newPassword);
         if (cred != null) {
           _state.user = cred.user;
         }
@@ -262,10 +262,10 @@ class _Controller {
         Alert.send(_state.context, "Could not change settings\n", e.message);
         return;
       }
-    }else{
-      try{
-      FireBaseController.updateEmail(_state.user, newEmail);
-      }catch(e){
+    } else {
+      try {
+        FireBaseController.updateEmail(_state.user, newEmail);
+      } catch (e) {
         FireBaseController.updateEmail(_state.user, oldEmail);
         FireBaseController.updatePW(oldEmail, password, password);
       }

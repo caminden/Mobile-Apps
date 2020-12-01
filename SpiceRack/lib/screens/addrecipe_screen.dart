@@ -47,9 +47,13 @@ class _AddRecipeState extends State<AddRecipe> {
           color: Colors.brown[100],
         ),
         child: IconButton(
-          icon: Icon(Icons.add),
+          icon: Icon(Icons.check),
           onPressed: con.save,
         ),
+      ),
+      appBar: AppBar(
+        title: Text("Add Recipe"),
+        centerTitle: true,
       ),
       body: Form(
         key: formKey,
@@ -232,7 +236,8 @@ class _Controller {
       r.docID = await FireBaseController.addRecipe(r);
       _state.recipes.insert(0, r);
       Navigator.pop(_state.context);
-      Alert.send(_state.context, "Add Recipe Complete", "recipe successfully added");
+      Alert.send(
+          _state.context, "Add Recipe Complete", "recipe successfully added");
     } catch (e) {
       Alert.send(_state.context, "Add Recipe error", e.message);
     }
@@ -274,7 +279,7 @@ class _Controller {
     c = c.toUpperCase();
     String b = s.substring(1);
     b = b.toLowerCase();
-    name = c+b; 
+    name = c + b;
   }
 
   void savePrep(String s) {

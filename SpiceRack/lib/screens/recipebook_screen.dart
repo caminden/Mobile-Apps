@@ -263,7 +263,8 @@ class _Controller {
       _state.render(() => delIndex = null);
       return;
     }
-    await Navigator.pushNamed(_state.context, DetailedRecipe.routeName, arguments: _state.recipes[index]);
+    await Navigator.pushNamed(_state.context, DetailedRecipe.routeName,
+        arguments: _state.recipes[index]);
   }
 
   void delete() async {
@@ -279,7 +280,7 @@ class _Controller {
     }
   }
 
-  void onSavedSearchKey(String s){
+  void onSavedSearchKey(String s) {
     searchKey = s;
   }
 
@@ -287,14 +288,11 @@ class _Controller {
     _state.formKey.currentState.save();
 
     var result;
-    if(searchKey == null || searchKey.trim().isEmpty){
+    if (searchKey == null || searchKey.trim().isEmpty) {
       result = await FireBaseController.loadRecipes(_state.user.email);
-    }
-    else{
+    } else {
       result = await FireBaseController.searchRecipes(
-        email: _state.user.email,
-        name: searchKey
-      );
+          email: _state.user.email, name: searchKey);
     }
 
     _state.render(() => _state.recipes = result);
