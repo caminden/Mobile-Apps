@@ -64,78 +64,80 @@ class _PantryState extends State<PantryScreen> {
                 ),
         ],
       ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/wood.jpg"),
-            fit: BoxFit.fill,
+      body: SingleChildScrollView(
+              child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/wood.jpg"),
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
-        child: pantry == null
-            ? Text("No items in pantry")
-            : Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          "ITEMS",
-                          style: TextStyle(
-                              fontSize: 30,
-                              decoration: TextDecoration.overline),
+          child: pantry == null
+              ? Text("No items in pantry")
+              : Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
+                          child: Text(
+                            "ITEMS",
+                            style: TextStyle(
+                                fontSize: 30,
+                                decoration: TextDecoration.overline),
+                          ),
                         ),
-                      ),
-                      Container(
-                        child: Text(
-                          "QUANTITY",
-                          style: TextStyle(
-                              fontSize: 30,
-                              decoration: TextDecoration.overline),
+                        Container(
+                          child: Text(
+                            "QUANTITY",
+                            style: TextStyle(
+                                fontSize: 30,
+                                decoration: TextDecoration.overline),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: pantry.items.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () => con.onTap(index),
-                              onLongPress: () => con.addDeleteIndex(index),
-                              child: Container(
+                      ],
+                    ),
+                    Container(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: pantry.items.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            Container(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              GestureDetector(
+                                onTap: () => con.onTap(index),
+                                onLongPress: () => con.addDeleteIndex(index),
+                                child: Container(
+                                    color: con.delIndex == index
+                                        ? Colors.red
+                                        : Colors.transparent,
+                                    width: MediaQuery.of(context).size.width / 2,
+                                    child: Text(
+                                      "${pantry.items[index]}",
+                                      style: TextStyle(fontSize: 20),
+                                    )),
+                              ),
+                              Container(
                                   color: con.delIndex == index
                                       ? Colors.red
                                       : Colors.transparent,
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: Text(
-                                    "${pantry.items[index]}",
+                                    "${pantry.quantity[index]}",
                                     style: TextStyle(fontSize: 20),
                                   )),
-                            ),
-                            Container(
-                                color: con.delIndex == index
-                                    ? Colors.red
-                                    : Colors.transparent,
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Text(
-                                  "${pantry.quantity[index]}",
-                                  style: TextStyle(fontSize: 20),
-                                )),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
       floatingActionButton: Container(
         decoration: BoxDecoration(
