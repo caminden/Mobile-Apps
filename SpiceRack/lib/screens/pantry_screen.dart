@@ -160,7 +160,7 @@ class _Controller {
   String searchKey;
 
   void addToPantry() async {
-    await Navigator.pushNamed(_state.context, AddPantry.routeName, arguments: {
+    Navigator.pushReplacementNamed(_state.context, AddPantry.routeName, arguments: {
       'user': _state.user,
       'pantry': _state.pantry,
     });

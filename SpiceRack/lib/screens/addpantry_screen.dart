@@ -180,10 +180,17 @@ class _Controller {
 
       p.docID = await FireBaseController.addPantryItems(p);
       Alert.circularProgressEnd(_state.context);
-      Navigator.pop(_state.context);
-      _state.pantry.items += name;
-      _state.pantry.quantity += quantity;
-      Alert.send(_state.context, "Added to Pantry", "Item[s] successfully added");
+      //Navigator.pop(_state.context);
+      if (_state.pantry != null) {
+        _state.pantry.items += name;
+        _state.pantry.quantity += quantity;
+      } else {
+        _state.pantry = p;
+      }
+      Navigator.pushReplacementNamed(_state.context, PantryScreen.routeName,
+          arguments: {'user': _state.user, 'pantry': _state.pantry});
+      Alert.send(
+          _state.context, "Added to Pantry", "Item[s] successfully added");
     } catch (e) {
       Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Pantry error", e.message);
