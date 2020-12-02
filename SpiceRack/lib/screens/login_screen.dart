@@ -266,15 +266,19 @@ class _Controller {
     }
     _state.formKey.currentState.save();
 
+    Alert.circularProgressStart(_state.context); //circular update icon
+
     try {
       UserCredential cred = await FireBaseController.login(email, password);
       //print("CRED: $cred\n");
       User u = cred.user;
       if (cred != null) {
+        Alert.circularProgressEnd(_state.context);
         Navigator.pushReplacementNamed(_state.context, HomeScreen.routename,
             arguments: u);
       }
     } catch (e) {
+      Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Login Error", e.message);
       //statement for when login fails, fix to return as error message
     }

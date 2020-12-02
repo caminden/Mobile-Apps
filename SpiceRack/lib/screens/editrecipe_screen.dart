@@ -7,22 +7,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddRecipe extends StatefulWidget {
-  static const routeName = '/recipeBook/addRecipe';
+class EditRecipe extends StatefulWidget {
+  static const routeName = '/recipeBook/editRecipe';
 
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _AddRecipeState();
+    return _EditRecipeState();
   }
 }
 
-class _AddRecipeState extends State<AddRecipe> {
+class _EditRecipeState extends State<EditRecipe> {
   _Controller con;
   var formKey = GlobalKey<FormState>();
   File image;
   User user;
-  List<Recipe> recipes;
+  Recipe recipe;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _AddRecipeState extends State<AddRecipe> {
   Widget build(BuildContext context) {
     Map map = ModalRoute.of(context).settings.arguments;
     user ??= map['user'];
-    recipes ??= map['recipes'];
+    recipe ??= map['recipe'];
     //print(user);
     // TODO: implement build
     return Scaffold(
@@ -52,7 +52,7 @@ class _AddRecipeState extends State<AddRecipe> {
         ),
       ),
       appBar: AppBar(
-        title: Text("Add Recipe"),
+        title: Text("Edit Recipe"),
         centerTitle: true,
       ),
       body: Form(
@@ -77,10 +77,10 @@ class _AddRecipeState extends State<AddRecipe> {
                         padding: EdgeInsets.all(10),
                         width: MediaQuery.of(context).size.width,
                         child: image == null
-                            ? Icon(
-                                Icons.filter_frames,
-                                size: 300,
-                                color: Colors.brown[100],
+                            ? Image.network(
+                                recipe.photoUrl,
+                                alignment: Alignment.center,
+                                scale: 3,
                               )
                             : Image.file(
                                 image,
@@ -130,6 +130,7 @@ class _AddRecipeState extends State<AddRecipe> {
                       decoration: InputDecoration(
                         hintText: "Name",
                       ),
+                      initialValue: recipe.name,
                       autocorrect: true,
                       textAlign: TextAlign.center,
                       validator: con.validateName,
@@ -143,6 +144,7 @@ class _AddRecipeState extends State<AddRecipe> {
                       decoration: InputDecoration(
                         hintText: "Prep time",
                       ),
+                      initialValue: recipe.prepTime,
                       autocorrect: true,
                       keyboardType: TextInputType.number,
                       validator: con.validatePrep,
@@ -153,13 +155,15 @@ class _AddRecipeState extends State<AddRecipe> {
                     width: 350,
                     padding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                     child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Ingredients {seperated with , }",
-                        ),
-                        autocorrect: true,
-                        maxLines: 4,
-                        validator: con.validateIngredients,
-                        onSaved: con.saveIngredients),
+                      decoration: InputDecoration(
+                        hintText: "Ingredients {seperated with , }",
+                      ),
+                      initialValue: recipe.ingredients,
+                      autocorrect: true,
+                      maxLines: 4,
+                      validator: con.validateIngredients,
+                      onSaved: con.saveIngredients,
+                    ),
                   ),
                   Container(
                     width: 350,
@@ -168,6 +172,7 @@ class _AddRecipeState extends State<AddRecipe> {
                       decoration: InputDecoration(
                         hintText: "Instructions",
                       ),
+                      initialValue: recipe.instructions,
                       autocorrect: true,
                       maxLines: 10,
                       validator: con.validateInstructions,
@@ -185,12 +190,8 @@ class _AddRecipeState extends State<AddRecipe> {
 }
 
 class _Controller {
-  _AddRecipeState _state;
+  _EditRecipeState _state;
   _Controller(this._state);
-  String name;
-  String instructions;
-  String ingredients;
-  String preptime;
 
   void getPicture(String src) async {
     try {
@@ -210,44 +211,29 @@ class _Controller {
     if (!_state.formKey.currentState.validate()) {
       return;
     }
-    if (_state.image == null) {
-      Alert.send(
-          _state.context, "No Picture", "The recipe must include a picture");
-      return;
-    }
     _state.formKey.currentState.save();
 
-    Alert.circularProgressStart(_state.context);
-
     try {
-      Map<String, String> photo = await FireBaseController.addPic(
-        image: _state.image,
-        uid: _state.user.uid,
-      );
+      if (_state.image != null) {
+        Map<String, String> photo = await FireBaseController.addPic(
+          image: _state.image,
+          uid: _state.user.uid,
+        );
+        _state.recipe.photoPath = photo['path'];
+        _state.recipe.photoUrl = photo['url'];
+      } else {
+        //nothing
+      }
 
-      var r = Recipe(
-        owner: _state.user.email,
-        name: name,
-        prepTime: preptime,
-        ingredients: ingredients,
-        instructions: instructions,
-        photoPath: photo['path'],
-        photoUrl: photo['url'],
-      );
-
-      r.docID = await FireBaseController.addRecipe(r);
-      _state.recipes.insert(0, r);
-      Alert.circularProgressEnd(_state.context);
+      await FireBaseController.updateRecipe(_state.recipe);
       Navigator.pop(_state.context);
       Alert.send(
-          _state.context, "Add Recipe Complete", "recipe successfully added");
+          _state.context, "Recipe Updated", "update successful");
     } catch (e) {
-      Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Add Recipe error", e.message);
     }
   }
 
-  //start validators
   String validateName(String s) {
     if (s.isEmpty) {
       print("Here");
@@ -283,18 +269,18 @@ class _Controller {
     c = c.toUpperCase();
     String b = s.substring(1);
     b = b.toLowerCase();
-    name = c + b;
+    _state.recipe.name = c + b;
   }
 
   void savePrep(String s) {
-    preptime = s;
+    _state.recipe.prepTime = s;
   }
 
   void saveIngredients(String s) {
-    ingredients = s;
+    _state.recipe.ingredients = s;
   }
 
   void saveInstructions(String s) {
-    instructions = s;
+    _state.recipe.instructions = s;
   }
 }

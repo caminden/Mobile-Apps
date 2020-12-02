@@ -1,6 +1,7 @@
 import 'package:SpiceRack/screens/addpantry_screen.dart';
 import 'package:SpiceRack/screens/addrecipe_screen.dart';
 import 'package:SpiceRack/screens/detail_screen.dart';
+import 'package:SpiceRack/screens/editrecipe_screen.dart';
 import 'package:SpiceRack/screens/home_screen.dart';
 import 'package:SpiceRack/screens/login_screen.dart';
 import 'package:SpiceRack/screens/pantry_screen.dart';
@@ -21,6 +22,7 @@ class SpiceRack extends StatelessWidget {
         primaryColor: Colors.brown[50],
         canvasColor: Colors.brown[50],
       ),
+      debugShowCheckedModeBanner: false,
       initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (context) => LoginScreen(),
@@ -32,6 +34,7 @@ class SpiceRack extends StatelessWidget {
         DetailedRecipe.routeName: (context) => DetailedRecipe(),
         PantryScreen.routeName: (conetxt) => PantryScreen(),
         AddPantry.routeName: (context) => AddPantry(),
+        EditRecipe.routeName: (context) => EditRecipe(),
       },
     );
   }

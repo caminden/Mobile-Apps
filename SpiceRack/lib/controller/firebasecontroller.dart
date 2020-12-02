@@ -110,6 +110,13 @@ class FireBaseController {
     return result;
   }
 
+  static Future updateRecipe(Recipe recipe) async {
+    await FirebaseFirestore.instance
+        .collection(Recipe.COLLECTION)
+        .doc(recipe.docID)
+        .set(recipe.serialize());
+  }
+
   static Future<Pantry> loadPantryItems(String email) async {
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection(Pantry.COLLECTION)
@@ -117,7 +124,6 @@ class FireBaseController {
         .get();
     Pantry result;
     if (snapshot != null && snapshot.docs.length != 0) {
-      print(snapshot.docs.length);
       for (var doc in snapshot.docs) {
         result = Pantry.deserialize(doc.data(), doc.id);
       }

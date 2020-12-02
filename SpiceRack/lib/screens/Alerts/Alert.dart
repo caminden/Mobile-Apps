@@ -13,4 +13,15 @@ class Alert {
           );
         });
   }
+
+  static void circularProgressStart(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
+  }
+
+  static void circularProgressEnd(BuildContext context){
+    Navigator.pop(context);
+  }
 }

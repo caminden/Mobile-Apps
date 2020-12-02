@@ -169,6 +169,8 @@ class _Controller {
     }
     _state.formKey.currentState.save();
 
+    Alert.circularProgressStart(_state.context);
+
     try {
       var p = Pantry(
         owner: _state.user.email,
@@ -177,11 +179,13 @@ class _Controller {
       );
 
       p.docID = await FireBaseController.addPantryItems(p);
+      Alert.circularProgressEnd(_state.context);
       Navigator.pop(_state.context);
       _state.pantry.items += name;
       _state.pantry.quantity += quantity;
-      Alert.send(_state.context, "Added to Pantry", "Success");
+      Alert.send(_state.context, "Added to Pantry", "Item[s] successfully added");
     } catch (e) {
+      Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Pantry error", e.message);
     }
   }

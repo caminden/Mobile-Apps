@@ -5,6 +5,7 @@ import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/pantry.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
+import 'package:SpiceRack/screens/editrecipe_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class _DetailedState extends State<DetailedRecipe> {
           color: Colors.brown[100],
         ),
         child: IconButton(
+          tooltip: "Press to use ingredients",
           icon: Icon(Icons.check),
           onPressed: con.useIngredients,
         ),
@@ -65,8 +67,7 @@ class _DetailedState extends State<DetailedRecipe> {
           ),
         ),
         //start of info page
-        child:
-        Container(
+        child: Container(
           width: 400,
           padding: EdgeInsets.all(5),
           child: Card(
@@ -86,18 +87,33 @@ class _DetailedState extends State<DetailedRecipe> {
                               "${recipe.photoUrl}",
                             )),
                         Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(20),
                               height: 100,
-                              child: Text("${recipe.name}",
-                                  style: TextStyle(fontSize: 25)),
+                              width: 120,
+                              alignment: Alignment.topRight,
+                              child: IconButton(
+                                tooltip: "Click to edit recipe",
+                                icon: Icon(Icons.edit),
+                                onPressed: con.editRecipe,
+                              ),
                             ),
                             Container(
-                              child: Text("  Prep Time:",
-                                  style: TextStyle(fontSize: 20)),
+                              height: 130,
+                              child: Text(
+                                "${recipe.name}",
+                                style: TextStyle(
+                                  fontSize: 25,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              child: Text(
+                                "  Prep Time:",
+                                style: TextStyle(fontSize: 20),
+                              ),
                             ),
                             Container(
                               child: Text("  ${recipe.prepTime}",
@@ -138,8 +154,12 @@ class _DetailedState extends State<DetailedRecipe> {
                       )),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    child: Text("${recipe.instructions}",
-                        style: TextStyle(fontSize: 15,),),
+                    child: Text(
+                      "${recipe.instructions}",
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -159,10 +179,12 @@ class _Controller {
 
   void useIngredients() async {
     //store ingredients from recipe into array
-    ingredients = _state.recipe.ingredients.split(",").map((e) => e.trim()).toList();
-    try{
+    ingredients =
+        _state.recipe.ingredients.split(",").map((e) => e.trim()).toList();
+    try {
       //get current pantry
-      Pantry pantry = await FireBaseController.loadPantryItems(_state.user.email);
+      Pantry pantry =
+          await FireBaseController.loadPantryItems(_state.user.email);
       for (int i = 0; i < pantry.items.length; i++) {
         for (int j = 0; j < ingredients.length; j++) {
           //if ingredients from recipe are found in pantry add their incex to array
@@ -172,21 +194,27 @@ class _Controller {
         }
       }
       //if number of ingredients in recipe and ingredients found in pantry are the same start removal
-      if(indeces.length != ingredients.length){
+      if (indeces.length != ingredients.length) {
         print("Ingredients not found");
-        Alert.send(_state.context, "Lacking Ingredients", "All ingredients could not be found, check pantry again [and item spelling]");
-      }
-      else{
-        for(int i in indeces){
+        Alert.send(_state.context, "Lacking Ingredients",
+            "All ingredients could not be found, check pantry again [and item spelling]");
+      } else {
+        for (int i in indeces) {
           pantry.quantity[i]--;
         }
         await FireBaseController.decrementPantryItems(pantry);
         Navigator.pop(_state.context);
-        Alert.send(_state.context, "Ingredients Used", "Pantry has been updated accordingly");
+        Alert.send(_state.context, "Ingredients Used",
+            "Pantry has been updated accordingly");
       }
-    }catch(e){
+    } catch (e) {}
+  }
 
-    }
-    
+  void editRecipe() async {
+    await Navigator.pushNamed(_state.context, EditRecipe.routeName, arguments: {
+      'user': _state.user,
+      'recipe': _state.recipe,
+    });
+    _state.render(() {});
   }
 }

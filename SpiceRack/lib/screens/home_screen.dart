@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
@@ -47,16 +49,21 @@ class _HomeState extends State<HomeScreen> {
                   name == null ? Text(user.email.split("@")[0]) : Text(name),
               margin: EdgeInsets.all(10.0),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.brown[100],
               ),
             ),
             Container(
+              color: Colors.brown[100],
               child: FlatButton(
                 child: Text("Sign out"),
                 onPressed: con.logout,
               ),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Container(
+              color: Colors.brown[100],
               child: FlatButton(
                 child: Text("Settings"),
                 onPressed: () => con.settings(user),
@@ -67,7 +74,7 @@ class _HomeState extends State<HomeScreen> {
       ),
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Color.fromARGB(170, 228, 193, 133),
+        backgroundColor: Colors.brown[50],
         title: Text("Spice Rack", style: TextStyle(fontSize: 30.0)),
       ),
       //start of body
@@ -86,29 +93,258 @@ class _HomeState extends State<HomeScreen> {
             SizedBox(
               height: 10.0,
             ),
-            Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width / 3,
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: FlatButton(
-                color: Colors.brown[100],
-                child: Text("Visit Recipe Book"),
-                onPressed: () => con.openRecipeBook(user.email),
-              ),
+            Stack(
+              children: [
+                Container(
+                  color: Colors.brown[100],
+                  height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.width,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                          Container(
+                            height: 100,
+                            width: 100,
+                            color: Colors.brown[50],
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Container(
+                                      color: Colors.black26,
+                                      width: 50,
+                                      height: 70),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      ),
+                                      Container(
+                                        height: 25,
+                                        width: 25,
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  )
+                                ]),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                //button
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(0),
+                  child: FlatButton(
+                    color: Colors.brown[100],
+                    child: Text("Visit Recipe Book"),
+                    onPressed: () => con.openRecipeBook(user.email),
+                  ),
+                ),
+              ],
             ),
             SizedBox(
               height: 10.0,
             ),
-            Container(
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width / 3,
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: FlatButton(
-                color: Colors.brown[100],
-                child: Text("Visit Pantry"),
-                onPressed: () => con.openPantry(user.email),
-              ),
-            )
+            Stack(
+              children: [
+                Container(
+                  color: Colors.brown[100],
+                  height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.width,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 3,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Column(
+                        children: [
+                          Container(width: 100, height: 100, color: Colors.black12,),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                //button
+                Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(0),
+                  child: FlatButton(
+                    color: Colors.brown[100],
+                    child: Text("Visit Pantry"),
+                    onPressed: () => con.openPantry(user.email),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -128,11 +364,14 @@ class _Controller {
   }
 
   void openRecipeBook(String email) async {
+    Alert.circularProgressStart(_state.context);
     try {
       List<Recipe> recipes = await FireBaseController.loadRecipes(email);
+      Alert.circularProgressEnd(_state.context);
       Navigator.pushNamed(_state.context, RecipeBook.routeName,
           arguments: {"recipes": recipes, "user": _state.user});
     } catch (e) {
+      Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Firestore error", "$e");
     }
   }
@@ -143,11 +382,14 @@ class _Controller {
   }
 
   void openPantry(String email) async {
+    Alert.circularProgressStart(_state.context);
     try {
       Pantry pantry = await FireBaseController.loadPantryItems(email);
+      Alert.circularProgressEnd(_state.context);
       Navigator.pushNamed(_state.context, PantryScreen.routeName,
           arguments: {"pantry": pantry, "user": _state.user});
     } catch (e) {
+      Alert.circularProgressEnd(_state.context);
       Alert.send(_state.context, "Firestore error", "$e");
     }
   }
