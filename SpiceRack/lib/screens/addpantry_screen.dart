@@ -162,7 +162,6 @@ class _Controller {
   _Controller(this._state);
   List<String> name = [];
   List<int> quantity = [];
-  List<DateTime> selectedDate = [];
 
   void save() async {
     if (!_state.formKey.currentState.validate()) {
@@ -179,6 +178,8 @@ class _Controller {
 
       p.docID = await FireBaseController.addPantryItems(p);
       Navigator.pop(_state.context);
+      _state.pantry.items += name;
+      _state.pantry.quantity += quantity;
       Alert.send(_state.context, "Added to Pantry", "Success");
     } catch (e) {
       Alert.send(_state.context, "Pantry error", e.message);
@@ -217,20 +218,4 @@ class _Controller {
     int i = int.parse(s);
     this.quantity.add(i);
   }
-
-  //calender
-  void _selectDate(BuildContext context, int index) async {
-    final DateTime picked = await showDatePicker(
-      context: context, // Refer step 1
-      initialDate:
-          this.selectedDate == null ? DateTime.now() : this.selectedDate[index],
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null) {
-      selectedDate.insert(index, picked);
-    }
-  }
-
-  //saves
 }

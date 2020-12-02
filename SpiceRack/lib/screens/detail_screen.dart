@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
+import 'package:SpiceRack/screens/Models/pantry.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -36,7 +38,9 @@ class _DetailedState extends State<DetailedRecipe> {
 
   @override
   Widget build(BuildContext context) {
-    recipe = ModalRoute.of(context).settings.arguments;
+    Map map = ModalRoute.of(context).settings.arguments;
+    recipe = map['recipe'];
+    user = map['user'];
     //print(user);
     // TODO: implement build
     return Scaffold(
@@ -47,7 +51,7 @@ class _DetailedState extends State<DetailedRecipe> {
         ),
         child: IconButton(
           icon: Icon(Icons.check),
-          onPressed: () {print("Ingredients used");},
+          onPressed: con.useIngredients,
         ),
       ),
       body: Container(
@@ -150,4 +154,39 @@ class _DetailedState extends State<DetailedRecipe> {
 class _Controller {
   _DetailedState _state;
   _Controller(this._state);
+  List<String> ingredients;
+  List<int> indeces = [];
+
+  void useIngredients() async {
+    //store ingredients from recipe into array
+    ingredients = _state.recipe.ingredients.split(",").map((e) => e.trim()).toList();
+    try{
+      //get current pantry
+      Pantry pantry = await FireBaseController.loadPantryItems(_state.user.email);
+      for (int i = 0; i < pantry.items.length; i++) {
+        for (int j = 0; j < ingredients.length; j++) {
+          //if ingredients from recipe are found in pantry add their incex to array
+          if (ingredients[j].toLowerCase() == pantry.items[i].toLowerCase()) {
+            indeces.add(i);
+          }
+        }
+      }
+      //if number of ingredients in recipe and ingredients found in pantry are the same start removal
+      if(indeces.length != ingredients.length){
+        print("Ingredients not found");
+        Alert.send(_state.context, "Lacking Ingredients", "All ingredients could not be found, check pantry again [and item spelling]");
+      }
+      else{
+        for(int i in indeces){
+          pantry.quantity[i]--;
+        }
+        await FireBaseController.decrementPantryItems(pantry);
+        Navigator.pop(_state.context);
+        Alert.send(_state.context, "Ingredients Used", "Pantry has been updated accordingly");
+      }
+    }catch(e){
+
+    }
+    
+  }
 }

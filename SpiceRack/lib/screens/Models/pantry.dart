@@ -7,7 +7,6 @@ class Pantry {
 
   List<dynamic> items;
   List<dynamic> quantity;
-  //List<DateTime> expire;
   String owner;
   String docID;
 
@@ -15,12 +14,11 @@ class Pantry {
     this.docID,
     this.owner,
     this.items,
-    //this.expire,
     this.quantity,
   }){
     this.items ??= [];
     this.quantity ??= [];
-    //this.expire ??= [];
+
   }
 
   Map<String, dynamic> serialize(){
@@ -28,7 +26,6 @@ class Pantry {
       OWNER: owner,
       ITEMS: items,
       QUANTITY: quantity,
-      //EXPIRE: expire,
     };
   }
 
@@ -38,7 +35,6 @@ class Pantry {
       items: data[Pantry.ITEMS],
       owner: data[Pantry.OWNER],
       quantity: data[Pantry.QUANTITY],
-      //expire: data[Pantry.EXPIRE],
     );
   }
 }

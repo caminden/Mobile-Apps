@@ -264,7 +264,7 @@ class _Controller {
       return;
     }
     await Navigator.pushNamed(_state.context, DetailedRecipe.routeName,
-        arguments: _state.recipes[index]);
+        arguments: {'recipe' : _state.recipes[index], 'user': _state.user});
   }
 
   void delete() async {

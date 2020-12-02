@@ -60,7 +60,7 @@ class _PantryState extends State<PantryScreen> {
                 )
               : IconButton(
                   icon: Icon(Icons.delete),
-                  //onPressed: con.delete,
+                  onPressed: con.delete,
                 ),
         ],
       ),
@@ -107,13 +107,23 @@ class _PantryState extends State<PantryScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            GestureDetector(
+                              onTap: () => con.onTap(index),
+                              onLongPress: () => con.addDeleteIndex(index),
+                              child: Container(
+                                  color: con.delIndex == index
+                                      ? Colors.red
+                                      : Colors.transparent,
+                                  width: MediaQuery.of(context).size.width / 2,
+                                  child: Text(
+                                    "${pantry.items[index]}",
+                                    style: TextStyle(fontSize: 20),
+                                  )),
+                            ),
                             Container(
-                                width: MediaQuery.of(context).size.width / 2,
-                                child: Text(
-                                  "${pantry.items[index]}",
-                                  style: TextStyle(fontSize: 20),
-                                )),
-                            Container(
+                                color: con.delIndex == index
+                                    ? Colors.red
+                                    : Colors.transparent,
                                 width: MediaQuery.of(context).size.width / 2,
                                 child: Text(
                                   "${pantry.quantity[index]}",
@@ -152,11 +162,11 @@ class _Controller {
       'user': _state.user,
       'pantry': _state.pantry,
     });
-    _state.render(() {});
+    _state.render((){});
   }
 
   void onSaveSearchKey(String s) {
-   searchKey = s;
+    searchKey = s;
   }
 
   void search() async {
@@ -170,7 +180,8 @@ class _Controller {
       String b = searchKey.substring(1);
       b = b.toLowerCase();
       searchKey = c + b;
-      Pantry original = await FireBaseController.loadPantryItems(_state.user.email);
+      Pantry original =
+          await FireBaseController.loadPantryItems(_state.user.email);
       for (int i = 0; i < original.items.length; i++) {
         if (original.items[i].contains(searchKey)) {
           result.items.add(original.items[i]);
@@ -179,5 +190,32 @@ class _Controller {
       }
     }
     _state.render(() => _state.pantry = result);
+  }
+
+  void addDeleteIndex(int index) {
+    _state.render(() {
+      delIndex = (delIndex == index ? null : index);
+    });
+  }
+
+  void onTap(int index) async {
+    if (delIndex != null) {
+      _state.render(() => delIndex = null);
+    }
+  }
+
+  void delete() async {
+    try {
+      if (_state.pantry.items.length == 1) {
+        await FireBaseController.deletePantry(_state.pantry);
+      } else {
+        await FireBaseController.removePantryItems(_state.pantry, delIndex);
+      }
+      _state.render(() {
+        _state.pantry.items.removeAt(delIndex);
+        _state.pantry.quantity.removeAt(delIndex);
+        delIndex = null;
+      });
+    } catch (e) {}
   }
 }

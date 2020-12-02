@@ -169,4 +169,68 @@ class FireBaseController {
       return ref.id;
     }
   }
+
+  static Future<void> decrementPantryItems(Pantry newPantry) async {
+    //get the document from firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection(Pantry.COLLECTION)
+        .where(Pantry.OWNER, isEqualTo: newPantry.owner)
+        .get();
+    Pantry result;
+    if (snapshot != null && snapshot.docs.length != 0) {
+      //set result to the current pantry
+      for (var doc in snapshot.docs) {
+        result = Pantry.deserialize(doc.data(), doc.id);
+      }
+      Pantry pantry = result;
+      for (int i = 0; i < newPantry.items.length; i++) {
+        for (int j = 0; j < pantry.items.length; j++) {
+          //check old pantry for the ingredients matching those in new pantry
+          if (newPantry.items[i] == pantry.items[j]) {
+            //if ingredients in new pantry match ones in old pantry, set the old pantry items quantity to the new quantity
+            pantry.quantity[j] = newPantry.quantity[i];
+            //if new quantity is 0, delete the item and quantity # from the array
+            if (pantry.quantity[j] == 0) {
+              pantry.items.removeAt(j);
+              pantry.quantity.removeAt(j);
+            }
+          }
+        }
+      }
+      //update doc with pantry filled with new data
+      await FirebaseFirestore.instance
+          .collection(Pantry.COLLECTION)
+          .doc(pantry.docID)
+          .update(pantry.serialize());
+    }
+  }
+
+  static Future<void> removePantryItems(Pantry newPantry, int index) async {
+    //get the document from firestore
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection(Pantry.COLLECTION)
+        .where(Pantry.OWNER, isEqualTo: newPantry.owner)
+        .get();
+    Pantry result;
+    if (snapshot != null && snapshot.docs.length != 0) {
+      //set result to the current pantry
+      for (var doc in snapshot.docs) {
+        result = Pantry.deserialize(doc.data(), doc.id);
+      }
+      result.items.removeAt(index);
+      result.quantity.removeAt(index);
+      //update doc with pantry filled with new data
+      await FirebaseFirestore.instance
+          .collection(Pantry.COLLECTION)
+          .doc(result.docID)
+          .update(result.serialize());
+    }
+  }
+
+  static Future deletePantry(Pantry pantry) async {
+    await FirebaseFirestore.instance
+        .collection(Pantry.COLLECTION)
+        .doc(pantry.docID)
+        .delete();
+  }
 }
