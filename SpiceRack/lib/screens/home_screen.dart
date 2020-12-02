@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:SpiceRack/controller/firebasecontroller.dart';
 import 'package:SpiceRack/screens/Alerts/Alert.dart';
 import 'package:SpiceRack/screens/Models/recipe.dart';
@@ -93,10 +92,11 @@ class _HomeState extends State<HomeScreen> {
             SizedBox(
               height: 10.0,
             ),
+            //start of 1st box
             Stack(
               children: [
                 Container(
-                  color: Colors.brown[100],
+                  color: Colors.black26,
                   height: MediaQuery.of(context).size.height / 3,
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -313,10 +313,11 @@ class _HomeState extends State<HomeScreen> {
             SizedBox(
               height: 10.0,
             ),
+            //start of 2nd box
             Stack(
               children: [
                 Container(
-                  color: Colors.brown[100],
+                  color: Colors.black26,
                   height: MediaQuery.of(context).size.height / 3,
                   width: MediaQuery.of(context).size.width,
                 ),
@@ -325,10 +326,50 @@ class _HomeState extends State<HomeScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Column(
-                        children: [
-                          Container(width: 100, height: 100, color: Colors.black12,),
-                        ],
+                      Container(
+                        width: 150,
+                        height: 200,
+                        color: Colors.brown[100],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(height: 10, width: 20, color: Colors.white,),
+                                Container(height: 10, width: 20, color: Colors.white,),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(height: 10, width: 20, color: Colors.white,),
+                                Container(height: 10, width: 20, color: Colors.white,),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(height: 10, width: 20, color: Colors.white,),
+                                Container(height: 10, width: 20, color: Colors.white,),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(height: 10, width: 20, color: Colors.white,),
+                                Container(height: 10, width: 20, color: Colors.white,),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Container(height: 10, width: 20, color: Colors.white,),
+                                Container(height: 10, width: 20, color: Colors.white,),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
