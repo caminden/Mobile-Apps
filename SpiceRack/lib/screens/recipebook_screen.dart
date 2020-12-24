@@ -6,6 +6,7 @@ import 'package:SpiceRack/screens/detail_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class RecipeBook extends StatefulWidget {
   static const routeName = '/homeScreen/recipeBook';
@@ -111,37 +112,52 @@ class _RecipeBookState extends State<RecipeBook> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: <Widget>[
                                     Container(
+                                        width: MediaQuery.of(context).size.width / 2,
                                         padding: EdgeInsets.all(10),
                                         child: Image.network(
                                           "${recipes[index].photoUrl}",
                                         )),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          padding: EdgeInsets.all(20),
-                                          height: 100,
-                                          child: Text("${recipes[index].name}",
-                                              style: TextStyle(fontSize: 25)),
-                                        ),
-                                        Container(
-                                          child: Text("  Prep Time:",
-                                              style: TextStyle(fontSize: 20)),
-                                        ),
-                                        Container(
-                                          child: Text(
-                                              "  ${recipes[index].prepTime}",
-                                              style: TextStyle(fontSize: 20)),
-                                        ),
-                                        Container(
-                                          height: 80,
-                                          alignment: Alignment.bottomCenter,
-                                          child: Text("Click for more"),
-                                        ),
-                                      ],
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Expanded(
+                                              child: Text(
+                                                  "${recipes[index].name}",
+                                                  style:
+                                                      TextStyle(fontSize: 25)),
+                                            ),
+                                          ),
+                                          Container(
+                                              child: Column(
+                                            children: <Widget>[
+                                              Container(
+                                                child: Text("  Prep Time:",
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
+                                              Container(
+                                                child: Text(
+                                                    "  ${recipes[index].prepTime}",
+                                                    style: TextStyle(
+                                                        fontSize: 20)),
+                                              ),
+                                            ],
+                                          )),
+                                          Container(
+                                            height: 80,
+                                            alignment: Alignment.bottomCenter,
+                                            child: Text("Click for more"),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -167,42 +183,57 @@ class _RecipeBookState extends State<RecipeBook> {
                                             MainAxisAlignment.spaceEvenly,
                                         children: <Widget>[
                                           Container(
+                                            width: MediaQuery.of(context).size.width / 2,
                                               padding: EdgeInsets.all(10),
                                               child: Image.network(
                                                 "${recipes[index + 1].photoUrl}",
                                               )),
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                padding: EdgeInsets.all(20),
-                                                height: 100,
-                                                child: Text(
-                                                    "${recipes[index + 1].name}",
-                                                    style: TextStyle(
-                                                        fontSize: 25)),
-                                              ),
-                                              Container(
-                                                child: Text("  Prep Time:",
-                                                    style: TextStyle(
-                                                        fontSize: 20)),
-                                              ),
-                                              Container(
-                                                child: Text(
-                                                    "  ${recipes[index + 1].prepTime}",
-                                                    style: TextStyle(
-                                                        fontSize: 20)),
-                                              ),
-                                              Container(
-                                                height: 80,
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                child: Text("Click for more"),
-                                              ),
-                                            ],
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                3,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Expanded(
+                                                    child: Text(
+                                                        "${recipes[index + 1].name}",
+                                                        style: TextStyle(
+                                                            fontSize: 25)),
+                                                  ),
+                                                ),
+                                                Container(
+                                                    child: Column(
+                                                  children: <Widget>[
+                                                    Container(
+                                                      child: Text(
+                                                          "  Prep Time:",
+                                                          style: TextStyle(
+                                                              fontSize: 20)),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                          "  ${recipes[index + 1].prepTime}",
+                                                          style: TextStyle(
+                                                              fontSize: 20)),
+                                                    ),
+                                                  ],
+                                                )),
+                                                Container(
+                                                  height: 80,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Text("Click for more"),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -264,7 +295,7 @@ class _Controller {
       return;
     }
     await Navigator.pushNamed(_state.context, DetailedRecipe.routeName,
-        arguments: {'recipe' : _state.recipes[index], 'user': _state.user});
+        arguments: {'recipe': _state.recipes[index], 'user': _state.user});
   }
 
   void delete() async {

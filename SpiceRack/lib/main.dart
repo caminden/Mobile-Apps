@@ -9,6 +9,7 @@ import 'package:SpiceRack/screens/recipebook_screen.dart';
 import 'package:SpiceRack/screens/settings_screen.dart';
 import 'package:SpiceRack/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(SpiceRack());
@@ -38,4 +39,8 @@ class SpiceRack extends StatelessWidget {
       },
     );
   }
+
+  
 }
+
+

@@ -9,6 +9,7 @@ import 'package:SpiceRack/screens/editrecipe_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class DetailedRecipe extends StatefulWidget {
@@ -82,50 +83,60 @@ class _DetailedState extends State<DetailedRecipe> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
+                            width: MediaQuery.of(context).size.width / 2,
                             padding: EdgeInsets.all(10),
                             child: Image.network(
                               "${recipe.photoUrl}",
                             )),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 100,
-                              width: 120,
-                              alignment: Alignment.topRight,
-                              child: IconButton(
-                                tooltip: "Click to edit recipe",
-                                icon: Icon(Icons.edit),
-                                onPressed: con.editRecipe,
+                        Container(
+                          width: MediaQuery.of(context).size.width / 3,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 10,
                               ),
-                            ),
-                            Container(
-                              height: 130,
-                              child: Text(
-                                "${recipe.name}",
-                                style: TextStyle(
-                                  fontSize: 25,
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                child: Expanded(
+                                  child: Text(
+                                    "${recipe.name}",
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              child: Text(
-                                "  Prep Time:",
-                                style: TextStyle(fontSize: 20),
+                              Container(
+                                  child: Column(children: <Widget>[
+                                Container(
+                                  child: Text(
+                                    "  Prep Time: ",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ),
+                                Container(
+                                  child: Text("  ${recipe.prepTime}",
+                                      style: TextStyle(fontSize: 20)),
+                                ),
+                              ])),
+                              Container(
+                                alignment: Alignment.bottomRight,
+                                child: IconButton(
+                                  tooltip: "Click to edit recipe",
+                                  icon: Icon(Icons.edit),
+                                  onPressed: con.editRecipe,
+                                ),
                               ),
-                            ),
-                            Container(
-                              child: Text("  ${recipe.prepTime}",
-                                  style: TextStyle(fontSize: 20)),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                   Container(
-                      width: 400,
+                      width: MediaQuery.of(context).size.width,
                       height: 1,
                       color: Colors.black), //line segment
                   SizedBox(height: 10),
